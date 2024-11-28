@@ -14,7 +14,7 @@ namespace CreditosApi.Entities
         public string APELLIDO { get; set; }
         public string NOMBRE { get; set; }
         public string NRO_DOC { get; set; }
-        public DateTime FECHA_NACIMIENTO { get; set; }
+        public DateTime? FECHA_NACIMIENTO { get; set; }
         public string DIRECCION { get; set; }
         public string LOCALIDAD { get; set; }
         public int COD_PROVINCIA { get; set; }
@@ -26,7 +26,7 @@ namespace CreditosApi.Entities
         public string TIPODOCUMENTO { get; set; }
         public bool ACTIVO { get; set; }
         public bool CONFIRMADO { get; set; }
-        public DateTime FECHA_ALTA { get; set; }
+        public DateTime? FECHA_ALTA { get; set; }
         public string SEXO { get; set; }
         public string MENSAF { get; set; }
         public int NIVEL_CIDI { get; set; }
@@ -34,7 +34,7 @@ namespace CreditosApi.Entities
         public int CEL_NUMERO { get; set; }
         public bool CEL_VALIDADO { get; set; }
         public int CEL_COD_VALIDACION { get; set; }
-        public DateTime CEL_VIGENCIA_COD_VALIDACION { get; set; }
+        public DateTime? CEL_VIGENCIA_COD_VALIDACION { get; set; }
 
         public Vecino_digital()
         {

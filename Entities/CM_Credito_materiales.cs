@@ -28,6 +28,13 @@ namespace CreditosApi.Entities
         public Int16 con_deuda { get; set; }
         public decimal saldo_adeudado { get; set; }
         public DateTime proximo_vencimiento { get; set; }
+        public int circunscripcion { get; set; }
+        public int seccion { get; set; }
+        public int manzana { get; set; }
+        public int parcela { get; set; }
+        public int p_h { get; set; }
+
+
 
         public CM_Credito_materiales()
         {
@@ -49,6 +56,11 @@ namespace CreditosApi.Entities
             con_deuda = 0;
             saldo_adeudado = 0;
             proximo_vencimiento = DateTime.Now;
+            circunscripcion = 0;
+            seccion = 0;
+            manzana = 0;
+            parcela = 0;
+            p_h = 0;
         }
 
         private static List<CM_Credito_materiales> mapeo(SqlDataReader dr)
@@ -75,6 +87,13 @@ namespace CreditosApi.Entities
                 int con_deuda = dr.GetOrdinal("con_deuda");
                 int saldo_adeudado = dr.GetOrdinal("saldo_adeudado");
                 int proximo_vencimiento = dr.GetOrdinal("proximo_vencimiento");
+                int circunscripcion = dr.GetOrdinal("circunscripcion");
+                int seccion = dr.GetOrdinal("seccion");
+                int manzana = dr.GetOrdinal("manzana");
+                int parcela = dr.GetOrdinal("parcela");
+                int p_h = dr.GetOrdinal("p_h");
+
+
                 while (dr.Read())
                 {
                     obj = new CM_Credito_materiales();
@@ -96,6 +115,13 @@ namespace CreditosApi.Entities
                     if (!dr.IsDBNull(con_deuda)) { obj.con_deuda = dr.GetInt16(con_deuda); }
                     if (!dr.IsDBNull(saldo_adeudado)) { obj.saldo_adeudado = dr.GetDecimal(saldo_adeudado); }
                     if (!dr.IsDBNull(proximo_vencimiento)) { obj.proximo_vencimiento = dr.GetDateTime(proximo_vencimiento); }
+
+                    if (!dr.IsDBNull(circunscripcion)) { obj.circunscripcion = dr.GetInt32(circunscripcion); }
+                    if (!dr.IsDBNull(seccion)) { obj.seccion = dr.GetInt32(seccion); }
+                    if (!dr.IsDBNull(manzana)) { obj.manzana = dr.GetInt32(manzana); }
+                    if (!dr.IsDBNull(parcela)) { obj.parcela = dr.GetInt32(parcela); }
+                    if (!dr.IsDBNull(p_h)) { obj.p_h = dr.GetInt32(p_h); }
+
                     lst.Add(obj);
                 }
             }
@@ -178,6 +204,11 @@ namespace CreditosApi.Entities
                 sql.AppendLine(", con_deuda");
                 sql.AppendLine(", saldo_adeudado");
                 sql.AppendLine(", proximo_vencimiento");
+                sql.AppendLine(",circunscripcion");
+                sql.AppendLine(", seccion");
+                sql.AppendLine(", manzana");
+                sql.AppendLine(", parcela");
+                sql.AppendLine(", p_h");
                 sql.AppendLine(")");
                 sql.AppendLine("VALUES");
                 sql.AppendLine("(");
@@ -198,6 +229,11 @@ namespace CreditosApi.Entities
                 sql.AppendLine(", @con_deuda");
                 sql.AppendLine(", @saldo_adeudado");
                 sql.AppendLine(", @proximo_vencimiento");
+                sql.AppendLine(", @circunscripcion");
+                sql.AppendLine(", @seccion");
+                sql.AppendLine(", @manzana");
+                sql.AppendLine(", @parcela");
+                sql.AppendLine(", @p_h");
                 sql.AppendLine(")");
                 sql.AppendLine("SELECT SCOPE_IDENTITY()");
                 using (SqlConnection con = GetConnection())
@@ -222,6 +258,12 @@ namespace CreditosApi.Entities
                     cmd.Parameters.AddWithValue("@con_deuda", obj.con_deuda);
                     cmd.Parameters.AddWithValue("@saldo_adeudado", obj.saldo_adeudado);
                     cmd.Parameters.AddWithValue("@proximo_vencimiento", obj.proximo_vencimiento);
+                    cmd.Parameters.AddWithValue("@circunscripcion", obj.circunscripcion);
+                    cmd.Parameters.AddWithValue("@seccion", obj.seccion);
+                    cmd.Parameters.AddWithValue("@manzana", obj.manzana);
+                    cmd.Parameters.AddWithValue("@parcela", obj.parcela);
+                    cmd.Parameters.AddWithValue("@p_h", obj.p_h);
+
                     cmd.Connection.Open();
                     return Convert.ToInt32(cmd.ExecuteScalar());
                 }

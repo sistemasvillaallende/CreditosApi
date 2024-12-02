@@ -24,5 +24,7 @@ namespace CreditosApi.Entities
             objCon = new SqlConnection(connectionString);
             return objCon;
         }
+
+
     }
 }

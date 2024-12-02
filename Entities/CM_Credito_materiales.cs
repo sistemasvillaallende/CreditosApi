@@ -111,7 +111,7 @@ namespace CreditosApi.Entities
                 {
                     SqlCommand cmd = con.CreateCommand();
                     cmd.CommandType = CommandType.Text;
-                    cmd.CommandText = "SELECT *FROM Cm_credito_materiales";
+                    cmd.CommandText = "SELECT *FROM CM_CREDITO_MATERIALES";
                     cmd.Connection.Open();
                     SqlDataReader dr = cmd.ExecuteReader();
                     lst = mapeo(dr);
@@ -315,6 +315,101 @@ namespace CreditosApi.Entities
             }
         }
 
+
+        public static int Count()
+        {
+            try
+            {
+                int count = 0;
+                string sql = @"SELECT count(*) 
+                               FROM CM_CREDITO_MATERIALES (nolock)";
+
+                using (SqlConnection con = GetConnection())
+                {
+                    SqlCommand cmd = con.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = sql;
+                    cmd.Connection.Open();
+                    count = Convert.ToInt32(cmd.ExecuteScalar());
+                    return count;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public static List<CM_Credito_materiales> GetCreditoMPaginado(string buscarPor, string strParametro,
+         int pagina, int registros_por_pagina)
+        {
+            try
+            {
+                List<CM_Credito_materiales> lst = new List<CM_Credito_materiales>();
+                string sqlWhere = "";
+
+
+                if (!string.IsNullOrEmpty(strParametro))
+                {
+                    switch (buscarPor)
+                    {
+                        case "legajo":
+                            sqlWhere += @" WHERE legajo LIKE @parametro + '%' 
+                               ";
+                            break;
+                        case "cuit":
+                            sqlWhere += @" WHERE cuit_solicitante LIKE @parametro + '%'
+                               ";
+                            break;
+                        default:
+                            sqlWhere += @" WHERE legajo LIKE @parametro + '%' 
+                               ";
+                            break;
+                    }
+                }
+                else
+                {
+
+                    sqlWhere += " 1=1";
+                }
+
+                string sql = $@"
+            WITH CreditoMaterialesFiltrados AS (
+                SELECT *,
+                       COUNT(*) OVER () AS TotalRegistros
+                FROM CM_CREDITO_MATERIALES (nolock)
+                {sqlWhere}
+            )
+            SELECT *
+            FROM CreditoMaterialesFiltrados
+            ORDER BY legajo
+            OFFSET CASE WHEN (SELECT MAX(TotalRegistros) FROM CreditoMaterialesFiltrados) > @CantidadElementosPagina 
+                        THEN (@numeroPagina) * @CantidadElementosPagina ELSE 0 END ROWS
+            FETCH NEXT CASE WHEN (SELECT MAX(TotalRegistros) FROM CreditoMaterialesFiltrados) > @CantidadElementosPagina 
+                            THEN @CantidadElementosPagina ELSE (SELECT MAX(TotalRegistros) FROM CreditoMaterialesFiltrados) END ROWS ONLY;
+        ";
+
+                using (SqlConnection con = GetConnection())
+                {
+                    SqlCommand cmd = con.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = sql;
+                    cmd.Parameters.AddWithValue("@numeroPagina", pagina);
+                    cmd.Parameters.AddWithValue("@CantidadElementosPagina", registros_por_pagina);
+                    cmd.Parameters.AddWithValue("@parametro", strParametro);
+
+                    con.Open();
+                    SqlDataReader dr = cmd.ExecuteReader();
+                    lst = mapeo(dr);  
+                    return lst;
+                }
+            }
+
+            catch (Exception ex)
+            {
+                throw new Exception("Error al obtener credito materiales paginados", ex);
+            }
+        }
     }
 }
 

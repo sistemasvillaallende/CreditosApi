@@ -1,0 +1,65 @@
+### DotnetCore ###
+# .NET Core build folders
+bin/
+obj/
+
+# NuGet packages
+*.nupkg
+
+# Publish output
+publish/
+
+# .NET Core user secrets
+secrets.json
+
+# Logs and temporary files
+*.log
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+### VisualStudio ###
+# User-specific files
+.vs/
+.vscode/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows Installer package files
+*.exe
+
+# Windows generated files
+Thumbs.db
+ehthumbs.db
+
+
+# ASP.NET
+wwwroot/
+
+# ASP.NET Core configuration files
+appsettings.json
+appsettings.Development.json
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+
+# Backup files
+*.bak
+*.tmp
+
+### File extensions to ignore ###
+*.pdb
+*.dll
+*.exe
+*.json
+*.cache
+*.props
+*.bin
+
+# End of .gitignore

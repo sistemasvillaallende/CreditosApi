@@ -85,14 +85,13 @@ namespace CreditosApi.Entities
         }
 
         public static CM_Detalle_deuda_credito_materiales getByPk(
-        int nro_transaccion, int nro_item)
+        int nro_transaccion)
         {
             try
             {
                 StringBuilder sql = new StringBuilder();
                 sql.AppendLine("SELECT *FROM Cm_detalle_deuda_credito_materiales WHERE");
                 sql.AppendLine("nro_transaccion = @nro_transaccion");
-                sql.AppendLine("AND nro_item = @nro_item");
                 CM_Detalle_deuda_credito_materiales obj = null;
                 using (SqlConnection con = GetConnection())
                 {
@@ -100,7 +99,6 @@ namespace CreditosApi.Entities
                     cmd.CommandType = CommandType.Text;
                     cmd.CommandText = sql.ToString();
                     cmd.Parameters.AddWithValue("@nro_transaccion", nro_transaccion);
-                    cmd.Parameters.AddWithValue("@nro_item", nro_item);
                     cmd.Connection.Open();
                     SqlDataReader dr = cmd.ExecuteReader();
                     List<CM_Detalle_deuda_credito_materiales> lst = mapeo(dr);

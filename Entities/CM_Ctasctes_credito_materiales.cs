@@ -18,11 +18,11 @@ namespace CreditosApi.Entities
         public string periodo { get; set; }
         public int id_uva { get; set; }
         public decimal monto_original { get; set; }
-        public int nro_plan { get; set; }
+        public int? nro_plan { get; set; }
         public bool pagado { get; set; }
         public decimal debe { get; set; }
         public decimal haber { get; set; }
-        public int nro_procuracion { get; set; }
+        public int? nro_procuracion { get; set; }
         public bool pago_parcial { get; set; }
         public DateTime vencimiento { get; set; }
         public int nro_cedulon { get; set; }
@@ -47,11 +47,11 @@ namespace CreditosApi.Entities
             periodo = string.Empty;
             id_uva = 0;
             monto_original = 0;
-            nro_plan = 0;
+            nro_plan = null;
             pagado = false;
             debe = 0;
             haber = 0;
-            nro_procuracion = 0;
+            nro_procuracion = null;
             pago_parcial = false;
             vencimiento = DateTime.Now;
             nro_cedulon = 0;
@@ -157,7 +157,7 @@ namespace CreditosApi.Entities
         }
 
         public static CM_Ctasctes_credito_materiales getByPk(
-        int tipo_transaccion, int nro_transaccion, int nro_pago_parcial)
+        int tipo_transaccion, int nro_transaccion)
         {
             try
             {
@@ -165,7 +165,7 @@ namespace CreditosApi.Entities
                 sql.AppendLine("SELECT *FROM Cm_ctasctes_credito_materiales WHERE");
                 sql.AppendLine("tipo_transaccion = @tipo_transaccion");
                 sql.AppendLine("AND nro_transaccion = @nro_transaccion");
-                sql.AppendLine("AND nro_pago_parcial = @nro_pago_parcial");
+
                 CM_Ctasctes_credito_materiales obj = null;
                 using (SqlConnection con = GetConnection())
                 {
@@ -174,7 +174,6 @@ namespace CreditosApi.Entities
                     cmd.CommandText = sql.ToString();
                     cmd.Parameters.AddWithValue("@tipo_transaccion", tipo_transaccion);
                     cmd.Parameters.AddWithValue("@nro_transaccion", nro_transaccion);
-                    cmd.Parameters.AddWithValue("@nro_pago_parcial", nro_pago_parcial);
                     cmd.Connection.Open();
                     SqlDataReader dr = cmd.ExecuteReader();
                     List<CM_Ctasctes_credito_materiales> lst = mapeo(dr);
@@ -189,86 +188,39 @@ namespace CreditosApi.Entities
             }
         }
 
-        public static int insert(CM_Ctasctes_credito_materiales obj)
+
+        public static int Insert(CM_Ctasctes_credito_materiales obj, SqlConnection con, SqlTransaction trx, int ultimoRegistro)
         {
             try
             {
                 StringBuilder sql = new StringBuilder();
                 sql.AppendLine("INSERT INTO Cm_ctasctes_credito_materiales(");
-                sql.AppendLine("tipo_transaccion");
-                sql.AppendLine(", nro_transaccion");
-                sql.AppendLine(", nro_pago_parcial");
-                sql.AppendLine(", fecha_trasaccion");
-                sql.AppendLine(", id_credito_materiales");
-                sql.AppendLine(", periodo");
-                sql.AppendLine(", id_uva");
-                sql.AppendLine(", monto_original");
-                sql.AppendLine(", nro_plan");
-                sql.AppendLine(", pagado");
-                sql.AppendLine(", debe");
-                sql.AppendLine(", haber");
-                sql.AppendLine(", nro_procuracion");
-                sql.AppendLine(", pago_parcial");
-                sql.AppendLine(", vencimiento");
-                sql.AppendLine(", nro_cedulon");
-                sql.AppendLine(", categoria_deuda");
-                sql.AppendLine(", monto_pagado");
-                sql.AppendLine(", recargo");
-                sql.AppendLine(", honorarios");
-                sql.AppendLine(", iva_hons");
-                sql.AppendLine(", tipo_deuda");
-                sql.AppendLine(", decreto");
-                sql.AppendLine(", observaciones");
-                sql.AppendLine(", nro_cedulon_paypertic");
-                sql.AppendLine(", deuda_activa");
-                sql.AppendLine(")");
-                sql.AppendLine("VALUES");
-                sql.AppendLine("(");
-                sql.AppendLine("@tipo_transaccion");
-                sql.AppendLine(", @nro_transaccion");
-                sql.AppendLine(", @nro_pago_parcial");
-                sql.AppendLine(", @fecha_trasaccion");
-                sql.AppendLine(", @id_credito_materiales");
-                sql.AppendLine(", @periodo");
-                sql.AppendLine(", @id_uva");
-                sql.AppendLine(", @monto_original");
-                sql.AppendLine(", @nro_plan");
-                sql.AppendLine(", @pagado");
-                sql.AppendLine(", @debe");
-                sql.AppendLine(", @haber");
-                sql.AppendLine(", @nro_procuracion");
-                sql.AppendLine(", @pago_parcial");
-                sql.AppendLine(", @vencimiento");
-                sql.AppendLine(", @nro_cedulon");
-                sql.AppendLine(", @categoria_deuda");
-                sql.AppendLine(", @monto_pagado");
-                sql.AppendLine(", @recargo");
-                sql.AppendLine(", @honorarios");
-                sql.AppendLine(", @iva_hons");
-                sql.AppendLine(", @tipo_deuda");
-                sql.AppendLine(", @decreto");
-                sql.AppendLine(", @observaciones");
-                sql.AppendLine(", @nro_cedulon_paypertic");
-                sql.AppendLine(", @deuda_activa");
-                sql.AppendLine(")");
-                using (SqlConnection con = GetConnection())
+                sql.AppendLine("tipo_transaccion, nro_transaccion, nro_pago_parcial, fecha_trasaccion, id_credito_materiales, periodo,");
+                sql.AppendLine("id_uva, monto_original, nro_plan, pagado, debe, haber, nro_procuracion, pago_parcial, vencimiento,");
+                sql.AppendLine("nro_cedulon, categoria_deuda, monto_pagado, recargo, honorarios, iva_hons, tipo_deuda, decreto,");
+                sql.AppendLine("observaciones, nro_cedulon_paypertic, deuda_activa)");
+                sql.AppendLine("VALUES (");
+                sql.AppendLine("@tipo_transaccion, @nro_transaccion, @nro_pago_parcial, @fecha_trasaccion, @id_credito_materiales, @periodo,");
+                sql.AppendLine("@id_uva, @monto_original, @nro_plan, @pagado, @debe, @haber, @nro_procuracion, @pago_parcial, @vencimiento,");
+                sql.AppendLine("@nro_cedulon, @categoria_deuda, @monto_pagado, @recargo, @honorarios, @iva_hons, @tipo_deuda, @decreto,");
+                sql.AppendLine("@observaciones, @nro_cedulon_paypertic, @deuda_activa)");
+
+                using (SqlCommand cmd = new SqlCommand(sql.ToString(), con, trx))
                 {
-                    SqlCommand cmd = con.CreateCommand();
                     cmd.CommandType = CommandType.Text;
-                    cmd.CommandText = sql.ToString();
                     cmd.Parameters.AddWithValue("@tipo_transaccion", obj.tipo_transaccion);
-                    cmd.Parameters.AddWithValue("@nro_transaccion", obj.nro_transaccion);
+                    cmd.Parameters.AddWithValue("@nro_transaccion", ultimoRegistro);
                     cmd.Parameters.AddWithValue("@nro_pago_parcial", obj.nro_pago_parcial);
                     cmd.Parameters.AddWithValue("@fecha_trasaccion", obj.fecha_trasaccion);
                     cmd.Parameters.AddWithValue("@id_credito_materiales", obj.id_credito_materiales);
                     cmd.Parameters.AddWithValue("@periodo", obj.periodo);
                     cmd.Parameters.AddWithValue("@id_uva", obj.id_uva);
                     cmd.Parameters.AddWithValue("@monto_original", obj.monto_original);
-                    cmd.Parameters.AddWithValue("@nro_plan", obj.nro_plan);
+                    cmd.Parameters.AddWithValue("@nro_plan", obj.nro_plan ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@pagado", obj.pagado);
                     cmd.Parameters.AddWithValue("@debe", obj.debe);
                     cmd.Parameters.AddWithValue("@haber", obj.haber);
-                    cmd.Parameters.AddWithValue("@nro_procuracion", obj.nro_procuracion);
+                    cmd.Parameters.AddWithValue("@nro_procuracion", obj.nro_procuracion ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@pago_parcial", obj.pago_parcial);
                     cmd.Parameters.AddWithValue("@vencimiento", obj.vencimiento);
                     cmd.Parameters.AddWithValue("@nro_cedulon", obj.nro_cedulon);
@@ -282,17 +234,17 @@ namespace CreditosApi.Entities
                     cmd.Parameters.AddWithValue("@observaciones", obj.observaciones);
                     cmd.Parameters.AddWithValue("@nro_cedulon_paypertic", obj.nro_cedulon_paypertic);
                     cmd.Parameters.AddWithValue("@deuda_activa", obj.deuda_activa);
-                    cmd.Connection.Open();
+
                     return cmd.ExecuteNonQuery();
                 }
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception($"Error al insertar en Cm_ctasctes_credito_materiales: {ex.Message}", ex);
             }
         }
 
-        public static void update(CM_Ctasctes_credito_materiales obj)
+        public static void Update(CM_Ctasctes_credito_materiales obj, SqlConnection con, SqlTransaction trx)
         {
             try
             {
@@ -325,11 +277,12 @@ namespace CreditosApi.Entities
                 sql.AppendLine("tipo_transaccion=@tipo_transaccion");
                 sql.AppendLine("AND nro_transaccion=@nro_transaccion");
                 sql.AppendLine("AND nro_pago_parcial=@nro_pago_parcial");
-                using (SqlConnection con = GetConnection())
+
+                using (SqlCommand cmd = new SqlCommand(sql.ToString(), con, trx))
+
                 {
-                    SqlCommand cmd = con.CreateCommand();
                     cmd.CommandType = CommandType.Text;
-                    cmd.CommandText = sql.ToString();
+
                     cmd.Parameters.AddWithValue("@tipo_transaccion", obj.tipo_transaccion);
                     cmd.Parameters.AddWithValue("@nro_transaccion", obj.nro_transaccion);
                     cmd.Parameters.AddWithValue("@nro_pago_parcial", obj.nro_pago_parcial);
@@ -356,7 +309,6 @@ namespace CreditosApi.Entities
                     cmd.Parameters.AddWithValue("@observaciones", obj.observaciones);
                     cmd.Parameters.AddWithValue("@nro_cedulon_paypertic", obj.nro_cedulon_paypertic);
                     cmd.Parameters.AddWithValue("@deuda_activa", obj.deuda_activa);
-                    cmd.Connection.Open();
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -366,33 +318,126 @@ namespace CreditosApi.Entities
             }
         }
 
-        public static void delete(CM_Ctasctes_credito_materiales obj)
+        public static void Delete(int tipo_transaccion, int nro_transaccion, SqlConnection con, SqlTransaction trx)
         {
             try
             {
                 StringBuilder sql = new StringBuilder();
                 sql.AppendLine("DELETE  Cm_ctasctes_credito_materiales ");
                 sql.AppendLine("WHERE");
-                sql.AppendLine("tipo_transaccion=@tipo_transaccion");
+                sql.AppendLine("tipo_transaccion=@tipo_transaccion"); // 1 deuda , 2 pago 
                 sql.AppendLine("AND nro_transaccion=@nro_transaccion");
-                sql.AppendLine("AND nro_pago_parcial=@nro_pago_parcial");
-                using (SqlConnection con = GetConnection())
-                {
-                    SqlCommand cmd = con.CreateCommand();
-                    cmd.CommandType = CommandType.Text;
-                    cmd.CommandText = sql.ToString();
-                    cmd.Parameters.AddWithValue("@tipo_transaccion", obj.tipo_transaccion);
-                    cmd.Parameters.AddWithValue("@nro_transaccion", obj.nro_transaccion);
-                    cmd.Parameters.AddWithValue("@nro_pago_parcial", obj.nro_pago_parcial);
-                    cmd.Connection.Open();
-                    cmd.ExecuteNonQuery();
-                }
+
+                SqlCommand cmd = con.CreateCommand();
+                cmd.Transaction = trx;
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = sql.ToString();
+                cmd.Parameters.AddWithValue("@tipo_transaccion", tipo_transaccion);
+                cmd.Parameters.AddWithValue("@nro_transaccion", nro_transaccion);
+                //cmd.Connection.Open();
+                cmd.ExecuteNonQuery();
+
             }
             catch (Exception ex)
             {
                 throw ex;
             }
         }
+
+
+        public static void MarcopagadalaCtacte(int legajo, List<CM_Ctasctes_credito_materiales> lst,
+                  SqlConnection con, SqlTransaction trx)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.AppendLine("UPDATE CM_CTASCTES_CREDITO_MATERIALES");
+                sql.AppendLine("set pagado=1");
+                sql.AppendLine("WHERE legajo=@legajo AND ");
+                sql.AppendLine("   tipo_transaccion=1 AND ");
+                sql.AppendLine("   nro_transaccion=@nro_transaccion");
+                //
+                SqlCommand cmd = con.CreateCommand();
+                cmd.Transaction = trx;
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = sql.ToString();
+                cmd.Parameters.AddWithValue("@legajo", 0);
+                cmd.Parameters.AddWithValue("@nro_transaccion", 0);
+                foreach (var item in lst)
+                {
+                    cmd.Parameters["@legajo"].Value = legajo;
+                    cmd.Parameters["@nro_transaccion"].Value = item.nro_transaccion;
+                    cmd.ExecuteNonQuery();
+                }
+                //
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception("Error en la marca de la CtaCte del Legajo " + legajo);
+            }
+        }
+
+
+        private static double Calcula_Interes(double auxmonto_original, DateTime? vencimiento,
+                SqlConnection con, SqlTransaction trx)
+        {
+            try
+            {
+                double interes = 0;
+                SqlCommand cmd = con.CreateCommand();
+                cmd.Transaction = trx;
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = ""; // Procedimiento para calculo de intereses
+                cmd.Parameters.AddWithValue("@monto_original", auxmonto_original);
+                cmd.Parameters.AddWithValue("@vencimiento", Convert.ToDateTime(vencimiento));
+                interes = Convert.ToDouble(cmd.ExecuteScalar());
+                return interes;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public static int ObtenerUltimoNroTransaccion(SqlConnection con, SqlTransaction trx)
+        {
+            SqlCommand cmd = new SqlCommand("SELECT ISNULL(MAX(NRO_TRANSACCION), 0) FROM CM_CTASCTES_CREDITO_MATERIALES ", con, trx);
+            return (int)cmd.ExecuteScalar();
+        }
+
+        public static List<CM_Ctasctes_credito_materiales> GetListCtaCteById(int id_credito_materiales, SqlConnection con, SqlTransaction trx)
+        {
+            try
+            {
+                List<CM_Ctasctes_credito_materiales> lst = new List<CM_Ctasctes_credito_materiales>();
+
+                string SQL = "SELECT * FROM Cm_ctasctes_credito_materiales WHERE id_credito_materiales = @id_credito_materiales";
+
+                SqlCommand cmd = con.CreateCommand();
+                cmd.Transaction = trx;
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = SQL;
+
+                cmd.Parameters.AddWithValue("@id_credito_materiales", id_credito_materiales);
+                SqlDataReader dr = cmd.ExecuteReader();
+                lst = mapeo(dr);
+
+                return lst;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al obtener los registros de Cm_ctasctes_credito_materiales", ex);
+            }
+        }
+
+
+
+
+
+        // RELIQUIDAR 
+
+
+
 
     }
 }

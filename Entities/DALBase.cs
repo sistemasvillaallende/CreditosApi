@@ -24,5 +24,20 @@ namespace CreditosApi.Entities
             objCon = new SqlConnection(connectionString);
             return objCon;
         }
+
+
+        public static SqlConnection GetConnection(string strDB)
+        {
+            try
+            {
+                return new SqlConnection("Data Source=10.0.0.23;Initial Catalog=" + strDB + ";User ID=general");
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
     }
 }

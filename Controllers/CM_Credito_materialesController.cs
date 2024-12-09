@@ -1,3 +1,6 @@
+using System.ServiceModel.Channels;
+using CreditosApi.Entities.AUDITORIA;
+using CreditosApi.Entities.HELPERS;
 using CreditosApi.Helpers;
 using CreditosApi.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -19,15 +22,71 @@ namespace CreditosApi.Controllers
         }
 
 
-        [HttpGet]
-        public IActionResult GetHola()
+        [HttpPost]
+        public IActionResult InsertNuevoCredito(Credito_materialesAuditoria obj)
         {
-            return Ok("hola");
+            try
+            {
+                _CM_Credito_materialesService.InsertNuevoCredito(obj);
+
+                return Ok(new { message = "Se ha insertado nuevo credito." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Ocurrió un error al intentar insertar nuevo credito: " + ex.Message);
+            }
+        }
+
+
+        [HttpPut]
+        public IActionResult UpdateCredito(int legajo, int id_credito_materiales, Credito_materialesAuditoria obj)
+        {
+            try
+            {
+                _CM_Credito_materialesService.UpdateCredito(legajo, id_credito_materiales, obj);
+
+                return Ok(new { message = $"Se ha modificado el credito con legajo {legajo} ." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Ocurrió un error al intentar modificar nuevo credito: " + ex.Message);
+            }
+        }
+
+
+        [HttpPut]
+        public IActionResult BajaCredito(int legajo, int id_credito_materiales, Auditoria obj)
+        {
+            try
+            {
+                _CM_Credito_materialesService.BajaCredito(legajo, id_credito_materiales,obj);
+
+                return Ok(new { message = $"Se ha dado de baja correctamente el credito con legajo {legajo} ." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Ocurrió un error al intentar dar de baja credito: " + ex.Message);
+            }
+        }
+
+        [HttpDelete]
+        public IActionResult EliminarCredito(int legajo, int id_credito_materiales, Auditoria obj)
+        {
+            try
+            {
+                _CM_Credito_materialesService.DeleteCredito(legajo, id_credito_materiales,obj);
+
+                return Ok(new { message = $"Se ha eliminado correctamente el credito con legajo {legajo} ." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Ocurrió un error al eliminar credito: " + ex.Message);
+            }
         }
 
         [HttpGet]
         public ActionResult<PaginadorGenerico<Entities.CM_Credito_materiales>> GetCreditoMPaginado(
-           string buscarPor = "0", string strParametro = "0", int pagina = 1, int registros_por_pagina = 10)
+           string buscarPor = "0", string? strParametro = "", int pagina = 1, int registros_por_pagina = 10)
         {
 
             List<Entities.CM_Credito_materiales> _Creditos_Materiales;
@@ -57,7 +116,7 @@ namespace CreditosApi.Controllers
                     Resultado = _Creditos_Materiales
                 };
 
-                
+
                 return _PaginadorCM;
             }
             else

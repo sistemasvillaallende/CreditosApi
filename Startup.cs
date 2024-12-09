@@ -1,3 +1,4 @@
+using CreditosApi.Entities;
 using CreditosApi.Services;
 
 namespace CreditosApi
@@ -19,6 +20,11 @@ namespace CreditosApi
             // configure DI for application services
             services.AddScoped<ICM_Credito_materialesServices, CM_Credito_materialesServices>();
             services.AddScoped<ICM_Detalle_deuda_credito_materialesServices, CM_Detalle_deuda_credito_materialesServices>();
+            services.AddScoped<ICM_Ctasctes_credito_materialesServices, CM_ctasctes_credito_materialesService>();
+            services.AddScoped<ICM_Cate_deuda_creditoServices, CM_Cate_deuda_creditoServices>();
+            services.AddScoped<IBadecServices, BadecServices>();
+
+
 
             //
             services.AddCors();

@@ -55,7 +55,7 @@ namespace CreditosApi.Entities
                 {
                     SqlCommand cmd = con.CreateCommand();
                     cmd.CommandType = CommandType.Text;
-                    cmd.CommandText = "SELECT *FROM Cm_cate_deuda_credito_materiales";
+                    cmd.CommandText = "SELECT * FROM Cm_cate_deuda_credito_materiales";
                     cmd.Connection.Open();
                     SqlDataReader dr = cmd.ExecuteReader();
                     lst = mapeo(dr);

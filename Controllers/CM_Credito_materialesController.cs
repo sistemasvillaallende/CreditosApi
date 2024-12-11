@@ -126,6 +126,24 @@ namespace CreditosApi.Controllers
 
 
 
+        [HttpGet]
+        public IActionResult GetCreditoById(int id_credito_materiales)
+        {
+            try
+            {
+                var credito = _CM_Credito_materialesService.GetCreditoById(id_credito_materiales);
+
+
+                if(credito == null){
+                    return NotFound( new {  message = $"No se ha encontrado el credito con id : {id_credito_materiales} ." });
+                }
+                return Ok(credito);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Ocurrió un error al obtener credito: " + ex.Message);
+            }
+        }
 
     }
 }

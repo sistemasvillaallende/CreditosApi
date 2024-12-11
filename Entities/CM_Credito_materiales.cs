@@ -34,6 +34,7 @@ namespace CreditosApi.Entities
         public int parcela { get; set; }
         public int p_h { get; set; }
 
+
         public CM_Credito_materiales()
         {
             id_credito_materiales = 0;
@@ -91,6 +92,7 @@ namespace CreditosApi.Entities
                 int parcela = dr.GetOrdinal("parcela");
                 int p_h = dr.GetOrdinal("p_h");
 
+
                 while (dr.Read())
                 {
                     obj = new CM_Credito_materiales();
@@ -117,6 +119,7 @@ namespace CreditosApi.Entities
                     if (!dr.IsDBNull(manzana)) { obj.manzana = dr.GetInt32(manzana); }
                     if (!dr.IsDBNull(parcela)) { obj.parcela = dr.GetInt32(parcela); }
                     if (!dr.IsDBNull(p_h)) { obj.p_h = dr.GetInt32(p_h); }
+
                     lst.Add(obj);
                 }
             }
@@ -288,6 +291,7 @@ namespace CreditosApi.Entities
                     cmd.Parameters.AddWithValue("@manzana", obj.manzana);
                     cmd.Parameters.AddWithValue("@parcela", obj.parcela);
                     cmd.Parameters.AddWithValue("@p_h", obj.p_h);
+
                     cmd.Connection.Open();
                     return Convert.ToInt32(cmd.ExecuteScalar());
                 }

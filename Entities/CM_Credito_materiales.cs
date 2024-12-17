@@ -42,7 +42,7 @@ namespace CreditosApi.Entities
             domicilio = string.Empty;
             fecha_alta = DateTime.Now;
             baja = false;
-            fecha_baja = DateTime.Now;
+            fecha_baja = null;
             cuit_solicitante = string.Empty;
             garantes = string.Empty;
             presupuesto = 0;
@@ -54,7 +54,7 @@ namespace CreditosApi.Entities
             per_ultimo = string.Empty;
             con_deuda = 0;
             saldo_adeudado = 0;
-            proximo_vencimiento = DateTime.Now;
+            proximo_vencimiento = DateTime.Now.AddMonths(1);
             circunscripcion = 0;
             seccion = 0;
             manzana = 0;
@@ -135,7 +135,7 @@ namespace CreditosApi.Entities
                 {
                     SqlCommand cmd = con.CreateCommand();
                     cmd.CommandType = CommandType.Text;
-                    cmd.CommandText = "SELECT *FROM CM_CREDITO_MATERIALES";
+                    cmd.CommandText = "SELECT * FROM CM_CREDITO_MATERIALES";
                     cmd.Connection.Open();
                     SqlDataReader dr = cmd.ExecuteReader();
                     lst = mapeo(dr);
@@ -165,6 +165,36 @@ namespace CreditosApi.Entities
                     cmd.CommandText = sql.ToString();
                     cmd.Parameters.AddWithValue("@id_credito_materiales", id_credito_materiales);
                     cmd.Parameters.AddWithValue("@legajo", legajo);
+                    cmd.Connection.Open();
+                    SqlDataReader dr = cmd.ExecuteReader();
+                    List<CM_Credito_materiales> lst = mapeo(dr);
+                    if (lst.Count != 0)
+                        obj = lst[0];
+                }
+                return obj;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
+        public static CM_Credito_materiales GetById(int id_credito_materiales)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.AppendLine("SELECT *FROM Cm_credito_materiales WHERE");
+                sql.AppendLine("id_credito_materiales = @id_credito_materiales");
+                CM_Credito_materiales obj = null;
+                using (SqlConnection con = GetConnection())
+                {
+                    SqlCommand cmd = con.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = sql.ToString();
+                    cmd.Parameters.AddWithValue("@id_credito_materiales", id_credito_materiales);
                     cmd.Connection.Open();
                     SqlDataReader dr = cmd.ExecuteReader();
                     List<CM_Credito_materiales> lst = mapeo(dr);
@@ -353,11 +383,11 @@ namespace CreditosApi.Entities
                 sql.AppendLine(", con_deuda=@con_deuda");
                 sql.AppendLine(", saldo_adeudado=@saldo_adeudado");
                 sql.AppendLine(", proximo_vencimiento=@proximo_vencimiento");
-                sql.AppendLine(", @circunscripcion");
-                sql.AppendLine(", @seccion");
-                sql.AppendLine(", @manzana");
-                sql.AppendLine(", @parcela");
-                sql.AppendLine(", @p_h");
+                sql.AppendLine(", circunscripcion = @circunscripcion");
+                sql.AppendLine(", seccion = @seccion");
+                sql.AppendLine(", manzana = @manzana");
+                sql.AppendLine(", parcela = @parcela");
+                sql.AppendLine(", p_h = @p_h");
                 sql.AppendLine("WHERE");
                 sql.AppendLine("id_credito_materiales=@id_credito_materiales");
                 sql.AppendLine("AND legajo=@legajo");
@@ -404,7 +434,7 @@ namespace CreditosApi.Entities
             {
                 StringBuilder sql = new StringBuilder();
                 sql.AppendLine("UPDATE  Cm_credito_materiales SET");
-                sql.AppendLine("domicilio = @domicilio");
+                sql.AppendLine(" domicilio = @domicilio");
                 sql.AppendLine(", fecha_alta = @fecha_alta");
                 sql.AppendLine(", baja = @baja");
                 sql.AppendLine(", fecha_baja = @fecha_baja");
@@ -420,11 +450,11 @@ namespace CreditosApi.Entities
                 sql.AppendLine(", con_deuda = @con_deuda");
                 sql.AppendLine(", saldo_adeudado = @saldo_adeudado");
                 sql.AppendLine(", proximo_vencimiento = @proximo_vencimiento");
-                sql.AppendLine(", @circunscripcion");
-                sql.AppendLine(", @seccion");
-                sql.AppendLine(", @manzana");
-                sql.AppendLine(", @parcela");
-                sql.AppendLine(", @p_h");
+                sql.AppendLine(", circunscripcion = @circunscripcion");
+                sql.AppendLine(", seccion = @seccion");
+                sql.AppendLine(", manzana = @manzana");
+                sql.AppendLine(", parcela = @parcela");
+                sql.AppendLine(", p_h = @p_h");
                 sql.AppendLine("WHERE");
                 sql.AppendLine("id_credito_materiales = @id_credito_materiales");
                 sql.AppendLine("AND legajo = @legajo");
@@ -522,6 +552,32 @@ namespace CreditosApi.Entities
             }
         }
 
+        public static void AltaCredito( int id_credito_materiales, SqlConnection con, SqlTransaction trx)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.AppendLine("UPDATE Cm_credito_materiales");
+                sql.AppendLine("SET baja = @baja,");
+                sql.AppendLine("fecha_baja = @fecha_baja");
+                sql.AppendLine("WHERE id_credito_materiales = @id_credito_materiales");
+
+                using (SqlCommand cmd = new SqlCommand(sql.ToString(), con, trx))
+                {
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.AddWithValue("@baja", 0);
+                    cmd.Parameters.AddWithValue("@fecha_alta", DateTime.Now);
+                    cmd.Parameters.AddWithValue("@fecha_baja", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@id_credito_materiales", id_credito_materiales);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al dar de baja el crédito con ID {id_credito_materiales}: {ex.Message}", ex);
+            }
+        }
 
         public static int Count()
         {
@@ -617,6 +673,8 @@ namespace CreditosApi.Entities
                 throw new Exception("Error al obtener credito materiales paginados", ex);
             }
         }
+
+
 
 
     }

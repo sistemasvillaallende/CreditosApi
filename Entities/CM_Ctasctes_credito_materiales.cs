@@ -276,7 +276,6 @@ namespace CreditosApi.Entities
                 sql.AppendLine("WHERE");
                 sql.AppendLine("tipo_transaccion=@tipo_transaccion");
                 sql.AppendLine("AND nro_transaccion=@nro_transaccion");
-                sql.AppendLine("AND nro_pago_parcial=@nro_pago_parcial");
 
                 using (SqlCommand cmd = new SqlCommand(sql.ToString(), con, trx))
 
@@ -285,17 +284,16 @@ namespace CreditosApi.Entities
 
                     cmd.Parameters.AddWithValue("@tipo_transaccion", obj.tipo_transaccion);
                     cmd.Parameters.AddWithValue("@nro_transaccion", obj.nro_transaccion);
-                    cmd.Parameters.AddWithValue("@nro_pago_parcial", obj.nro_pago_parcial);
                     cmd.Parameters.AddWithValue("@fecha_trasaccion", obj.fecha_trasaccion);
                     cmd.Parameters.AddWithValue("@id_credito_materiales", obj.id_credito_materiales);
                     cmd.Parameters.AddWithValue("@periodo", obj.periodo);
                     cmd.Parameters.AddWithValue("@id_uva", obj.id_uva);
                     cmd.Parameters.AddWithValue("@monto_original", obj.monto_original);
-                    cmd.Parameters.AddWithValue("@nro_plan", obj.nro_plan);
+                    cmd.Parameters.AddWithValue("@nro_plan", obj.nro_plan ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@pagado", obj.pagado);
                     cmd.Parameters.AddWithValue("@debe", obj.debe);
                     cmd.Parameters.AddWithValue("@haber", obj.haber);
-                    cmd.Parameters.AddWithValue("@nro_procuracion", obj.nro_procuracion);
+                    cmd.Parameters.AddWithValue("@nro_procuracion", obj.nro_procuracion ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@pago_parcial", obj.pago_parcial);
                     cmd.Parameters.AddWithValue("@vencimiento", obj.vencimiento);
                     cmd.Parameters.AddWithValue("@nro_cedulon", obj.nro_cedulon);
@@ -399,11 +397,44 @@ namespace CreditosApi.Entities
             }
         }
 
+        // public static int ObtenerUltimoNroTransaccion(SqlConnection con, SqlTransaction trx)
+        // {
+        //     SqlCommand cmd = new SqlCommand("SELECT ISNULL(MAX(NRO_TRANSACCION), 0) FROM CM_CTASCTES_CREDITO_MATERIALES ", con, trx);
+        //     return (int)cmd.ExecuteScalar();
+        // }
+
         public static int ObtenerUltimoNroTransaccion(SqlConnection con, SqlTransaction trx)
         {
-            SqlCommand cmd = new SqlCommand("SELECT ISNULL(MAX(NRO_TRANSACCION), 0) FROM CM_CTASCTES_CREDITO_MATERIALES ", con, trx);
-            return (int)cmd.ExecuteScalar();
+            using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(MAX(NRO_TRANSACCION), 0) FROM CM_CTASCTES_CREDITO_MATERIALES", con, trx))
+            {
+                return (int)cmd.ExecuteScalar();
+            }
         }
+
+        // public static List<CM_Ctasctes_credito_materiales> GetListCtaCteById(int id_credito_materiales, SqlConnection con, SqlTransaction trx)
+        // {
+        //     try
+        //     {
+        //         List<CM_Ctasctes_credito_materiales> lst = new List<CM_Ctasctes_credito_materiales>();
+
+        //         string SQL = "SELECT * FROM Cm_ctasctes_credito_materiales WHERE id_credito_materiales = @id_credito_materiales";
+
+        //         SqlCommand cmd = con.CreateCommand();
+        //         cmd.Transaction = trx;
+        //         cmd.CommandType = CommandType.Text;
+        //         cmd.CommandText = SQL;
+
+        //         cmd.Parameters.AddWithValue("@id_credito_materiales", id_credito_materiales);
+        //         SqlDataReader dr = cmd.ExecuteReader();
+        //         lst = mapeo(dr);
+
+        //         return lst;
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         throw new Exception("Error al obtener los registros de Cm_ctasctes_credito_materiales", ex);
+        //     }
+        // }
 
         public static List<CM_Ctasctes_credito_materiales> GetListCtaCteById(int id_credito_materiales, SqlConnection con, SqlTransaction trx)
         {
@@ -413,14 +444,18 @@ namespace CreditosApi.Entities
 
                 string SQL = "SELECT * FROM Cm_ctasctes_credito_materiales WHERE id_credito_materiales = @id_credito_materiales";
 
-                SqlCommand cmd = con.CreateCommand();
-                cmd.Transaction = trx;
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText = SQL;
+                using (SqlCommand cmd = con.CreateCommand())
+                {
+                    cmd.Transaction = trx;
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = SQL;
+                    cmd.Parameters.AddWithValue("@id_credito_materiales", id_credito_materiales);
 
-                cmd.Parameters.AddWithValue("@id_credito_materiales", id_credito_materiales);
-                SqlDataReader dr = cmd.ExecuteReader();
-                lst = mapeo(dr);
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        lst = mapeo(dr);
+                    }
+                }
 
                 return lst;
             }
@@ -432,9 +467,65 @@ namespace CreditosApi.Entities
 
 
 
+        public static void DeleteExcedente(int id_credito_materiales, int cantCuotasPermitidas, SqlConnection con, SqlTransaction trx)
+        {
+
+            string ultimoPeriodoPermitido = ObtenerUltimoPeriodoPermitido(id_credito_materiales, cantCuotasPermitidas, con, trx);
 
 
-        // RELIQUIDAR 
+            string sql = @"DELETE FROM CM_Ctasctes_credito_materiales
+                   WHERE id_credito_materiales = @id_credito_materiales
+                   AND periodo > @ultimoPeriodoPermitido";
+
+            using (SqlCommand cmd = con.CreateCommand())
+            {
+                cmd.Transaction = trx;
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = sql;
+                cmd.Parameters.AddWithValue("@id_credito_materiales", id_credito_materiales);
+                cmd.Parameters.AddWithValue("@ultimoPeriodoPermitido", ultimoPeriodoPermitido);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+
+        private static string ObtenerUltimoPeriodoPermitido(int id_credito_materiales, int cantCuotasPermitidas, SqlConnection con, SqlTransaction trx)
+        {
+            // Consulta para obtener el último periodo actual
+            string sql = @"SELECT MIN(periodo) 
+                   FROM CM_Ctasctes_credito_materiales 
+                   WHERE id_credito_materiales = @id_credito_materiales";
+
+            string ultimoPeriodoActual;
+
+            using (SqlCommand cmd = con.CreateCommand())
+            {
+                cmd.Transaction = trx;
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = sql;
+                cmd.Parameters.AddWithValue("@id_credito_materiales", id_credito_materiales);
+
+                ultimoPeriodoActual = cmd.ExecuteScalar()?.ToString();
+            }
+
+            if (string.IsNullOrEmpty(ultimoPeriodoActual))
+                throw new Exception("No se encontraron periodos para el crédito especificado.");
+
+            int anio = int.Parse(ultimoPeriodoActual.Split('/')[0]);
+            int mes = int.Parse(ultimoPeriodoActual.Split('/')[1]);
+
+            for (int i = 1; i < cantCuotasPermitidas ; i++)
+            {
+                mes++;
+                if (mes > 12)
+                {
+                    mes = 1;
+                    anio++;
+                }
+            }
+            return $"{anio}/{mes:D2}";
+        }
+
 
 
 

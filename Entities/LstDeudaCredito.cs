@@ -6,30 +6,30 @@ namespace CreditosApi.Entities
     public class LstDeudaCredito : DALBase
     {
         public string periodo { get; set; }
-        public decimal monto_original { get; set; }
-        public decimal debe { get; set; }
-        public string vencimiento { get; set; }
+        public decimal deudaOriginal { get; set; }
+        public decimal importe { get; set; }
+        public string fecha_vencimiento { get; set; }
         public string desCategoria { get; set; }
         public int pagado { get; set; }
         public int nro_transaccion { get; set; }
         public int categoria_deuda { get; set; }
         public int nro_cedulon_paypertic { get; set; }
-        public decimal recargo { get; set; }
+        public decimal intereses { get; set; }
         public bool pago_parcial { get; set; }
         public decimal pago_a_cuenta { get; set; }
         public int nro_proc { get; set; }
         public LstDeudaCredito()
         {
             periodo = string.Empty;
-            monto_original = 0;
-            debe = 0;
-            vencimiento = string.Empty;
+            deudaOriginal = 0;
+            importe = 0;
+            fecha_vencimiento = string.Empty;
             desCategoria = string.Empty;
             pagado = 0;
             nro_transaccion = 0;
             categoria_deuda = 0;
             nro_cedulon_paypertic = 0;
-            recargo = 0;
+            intereses = 0;
             pago_parcial = false;
             pago_a_cuenta = 0;
             nro_proc = 0;
@@ -87,11 +87,11 @@ namespace CreditosApi.Entities
                     if (!dr.IsDBNull(dr.GetOrdinal("periodo")))
                     { oCredito.periodo = dr.GetString(dr.GetOrdinal("periodo")); }
                     if (!dr.IsDBNull(dr.GetOrdinal("monto_original")))
-                    { oCredito.monto_original = dr.GetDecimal(dr.GetOrdinal("monto_original")); }
+                    { oCredito.deudaOriginal = dr.GetDecimal(dr.GetOrdinal("monto_original")); }
                     if (!dr.IsDBNull(dr.GetOrdinal("debe")))
-                    { oCredito.debe = dr.GetDecimal(dr.GetOrdinal("debe")); }
+                    { oCredito.importe = dr.GetDecimal(dr.GetOrdinal("debe")); }
                     if (!dr.IsDBNull(dr.GetOrdinal("vencimiento")))
-                    {   oCredito.vencimiento = dr.GetDateTime(
+                    {   oCredito.fecha_vencimiento = dr.GetDateTime(
                         dr.GetOrdinal("vencimiento")).ToShortDateString();}
                     if (!dr.IsDBNull(dr.GetOrdinal("des_categoria")))
                     { oCredito.desCategoria = dr.GetString(dr.GetOrdinal("des_categoria")); }
@@ -102,7 +102,7 @@ namespace CreditosApi.Entities
                     if (!dr.IsDBNull(dr.GetOrdinal("categoria_deuda")))
                     { oCredito.categoria_deuda = dr.GetInt32(dr.GetOrdinal("categoria_deuda")); }
                     if (!dr.IsDBNull(dr.GetOrdinal("recargo")))
-                    { oCredito.recargo = dr.GetDecimal(dr.GetOrdinal("recargo")); }
+                    { oCredito.intereses = dr.GetDecimal(dr.GetOrdinal("recargo")); }
                     if (!dr.IsDBNull(dr.GetOrdinal("nro_cedulon_paypertic")))
                     { oCredito.nro_cedulon_paypertic = dr.GetInt32(dr.GetOrdinal("nro_cedulon_paypertic")); }
                     if (!dr.IsDBNull(dr.GetOrdinal("pago_parcial")))

@@ -23,6 +23,8 @@ namespace CreditosApi
             services.AddScoped<ICM_Ctasctes_credito_materialesServices, CM_ctasctes_credito_materialesService>();
             services.AddScoped<ICM_Cate_deuda_creditoServices, CM_Cate_deuda_creditoServices>();
             services.AddScoped<IBadecServices, BadecServices>();
+            services.AddScoped<ICM_UVAServices, CM_UVAServices>();
+
 
 
 

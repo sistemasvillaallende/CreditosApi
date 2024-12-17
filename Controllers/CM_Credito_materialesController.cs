@@ -1,4 +1,3 @@
-using System.ServiceModel.Channels;
 using CreditosApi.Entities.AUDITORIA;
 using CreditosApi.Entities.HELPERS;
 using CreditosApi.Helpers;
@@ -21,6 +20,25 @@ namespace CreditosApi.Controllers
             _CM_Credito_materialesService = CM_Credito_MaterialesServices;
         }
 
+        [HttpGet]
+        public IActionResult GetAllCreditos()
+        {
+            try
+            {
+                var lstCredito = _CM_Credito_materialesService.GetAllCreditos();
+
+
+                if (lstCredito.Count == 0)
+                {
+                    return NotFound(new { message = $"No se ha encontrado creditos." });
+                }
+                return Ok(lstCredito);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Ocurrió un error al obtener todos los credito: " + ex.Message);
+            }
+        }
 
         [HttpPost]
         public IActionResult InsertNuevoCredito(Credito_materialesAuditoria obj)
@@ -59,7 +77,7 @@ namespace CreditosApi.Controllers
         {
             try
             {
-                _CM_Credito_materialesService.BajaCredito(legajo, id_credito_materiales,obj);
+                _CM_Credito_materialesService.BajaCredito(legajo, id_credito_materiales, obj);
 
                 return Ok(new { message = $"Se ha dado de baja correctamente el credito con legajo {legajo} ." });
             }
@@ -69,12 +87,27 @@ namespace CreditosApi.Controllers
             }
         }
 
+        [HttpPut]
+        public IActionResult AltaCredito(int id_credito_materiales, Auditoria obj)
+        {
+            try
+            {
+                _CM_Credito_materialesService.AltaCredito(id_credito_materiales, obj);
+
+                return Ok(new { message = $"Se ha dado de alta correctamente el credito con ID {id_credito_materiales} ." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Ocurrió un error al intentar dar de alta credito: " + ex.Message);
+            }
+        }
+
         [HttpDelete]
         public IActionResult EliminarCredito(int legajo, int id_credito_materiales, Auditoria obj)
         {
             try
             {
-                _CM_Credito_materialesService.DeleteCredito(legajo, id_credito_materiales,obj);
+                _CM_Credito_materialesService.DeleteCredito(legajo, id_credito_materiales, obj);
 
                 return Ok(new { message = $"Se ha eliminado correctamente el credito con legajo {legajo} ." });
             }
@@ -134,8 +167,9 @@ namespace CreditosApi.Controllers
                 var credito = _CM_Credito_materialesService.GetCreditoById(id_credito_materiales);
 
 
-                if(credito == null){
-                    return NotFound( new {  message = $"No se ha encontrado el credito con id : {id_credito_materiales} ." });
+                if (credito == null)
+                {
+                    return NotFound(new { message = $"No se ha encontrado el credito con id : {id_credito_materiales} ." });
                 }
                 return Ok(credito);
             }

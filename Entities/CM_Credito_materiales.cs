@@ -135,7 +135,7 @@ namespace CreditosApi.Entities
                 {
                     SqlCommand cmd = con.CreateCommand();
                     cmd.CommandType = CommandType.Text;
-                    cmd.CommandText = "SELECT *FROM CM_CREDITO_MATERIALES";
+                    cmd.CommandText = "SELECT * FROM CM_CREDITO_MATERIALES";
                     cmd.Connection.Open();
                     SqlDataReader dr = cmd.ExecuteReader();
                     lst = mapeo(dr);
@@ -180,8 +180,8 @@ namespace CreditosApi.Entities
         }
 
 
-        
-        public static CM_Credito_materiales GetById( int id_credito_materiales)
+
+        public static CM_Credito_materiales GetById(int id_credito_materiales)
         {
             try
             {
@@ -552,6 +552,32 @@ namespace CreditosApi.Entities
             }
         }
 
+        public static void AltaCredito( int id_credito_materiales, SqlConnection con, SqlTransaction trx)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.AppendLine("UPDATE Cm_credito_materiales");
+                sql.AppendLine("SET baja = @baja,");
+                sql.AppendLine("fecha_baja = @fecha_baja");
+                sql.AppendLine("WHERE id_credito_materiales = @id_credito_materiales");
+
+                using (SqlCommand cmd = new SqlCommand(sql.ToString(), con, trx))
+                {
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.AddWithValue("@baja", 0);
+                    cmd.Parameters.AddWithValue("@fecha_alta", DateTime.Now);
+                    cmd.Parameters.AddWithValue("@fecha_baja", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@id_credito_materiales", id_credito_materiales);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al dar de baja el crédito con ID {id_credito_materiales}: {ex.Message}", ex);
+            }
+        }
 
         public static int Count()
         {
@@ -647,6 +673,8 @@ namespace CreditosApi.Entities
                 throw new Exception("Error al obtener credito materiales paginados", ex);
             }
         }
+
+
 
 
     }

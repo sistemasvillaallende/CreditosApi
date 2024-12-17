@@ -12,10 +12,24 @@ namespace CreditosApi.Services
 
 
 
-        public CM_Credito_materiales GetCreditoById(int id_credito_materiales){
+        public CM_Credito_materiales GetCreditoById(int id_credito_materiales)
+        {
             try
             {
                 return CM_Credito_materiales.GetById(id_credito_materiales);
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public List<CM_Credito_materiales> GetAllCreditos(){
+            try
+            {
+                List<CM_Credito_materiales> allCreditos = CM_Credito_materiales.read();
+                return allCreditos;
             }
             catch (System.Exception)
             {
@@ -63,13 +77,18 @@ namespace CreditosApi.Services
                     {
                         try
                         {
-                            obj.auditoria.identificacion = obj.creditoMateriales.legajo.ToString();
+                            var objCM = obj.creditoMateriales;
+
+                            obj.auditoria.identificacion = objCM.legajo.ToString();
                             obj.auditoria.proceso = "NUEVO CREDITO MATERIALES";
                             obj.auditoria.detalle = JsonConvert.SerializeObject(obj.creditoMateriales);
                             obj.auditoria.observaciones = string.Format("Fecha auditoria: {0}", DateTime.Now);
-                            int idGenerado = Entities.CM_Credito_materiales.Insert(obj.creditoMateriales, con, trx);
 
-                            InsertDeudasPorCuotas(obj.creditoMateriales, idGenerado, con, trx);
+                            objCM.presupuesto_uva = CalculoPresupuestoUVA(objCM.presupuesto);
+                            objCM.valor_cuota_uva= ValorCuotaUVA(objCM.presupuesto_uva,objCM.cant_cuotas);
+
+                            int idGenerado = Entities.CM_Credito_materiales.Insert(objCM, con, trx);
+                            InsertDeudasPorCuotas(objCM, idGenerado, con, trx);
                             AuditoriaD.InsertAuditoria(obj.auditoria, con, trx);
                             trx.Commit();
                         }
@@ -110,7 +129,7 @@ namespace CreditosApi.Services
                             // Actualiza los datos actuales del credito 
                             Entities.CM_Credito_materiales.Update(legajo, id_credito_materiales, obj.creditoMateriales, con, trx);
 
-                            UpdateCtaCtesXCredito(creditoActual,obj.creditoMateriales.cant_cuotas, obj.creditoMateriales.presupuesto,con,trx);
+                            UpdateCtaCtesXCredito(creditoActual, obj.creditoMateriales.cant_cuotas, obj.creditoMateriales.presupuesto, con, trx);
 
                             AuditoriaD.InsertAuditoria(obj.auditoria, con, trx);
                             trx.Commit();
@@ -147,6 +166,42 @@ namespace CreditosApi.Services
                             obj.detalle = JsonConvert.SerializeObject(CM_Credito_materiales.getByPk(id_credito_materiales, legajo));
                             obj.observaciones = string.Format("Fecha auditoria: {0}", DateTime.Now);
                             Entities.CM_Credito_materiales.BajaCredito(legajo, id_credito_materiales, con, trx);
+                            AuditoriaD.InsertAuditoria(obj, con, trx);
+                            trx.Commit();
+                        }
+                        catch (Exception)
+                        {
+                            trx.Rollback();
+                            throw;
+                        }
+                    }
+                }
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void AltaCredito( int id_credito_materiales, Auditoria obj)
+        {
+            try
+            {
+                using (SqlConnection con = DALBase.GetConnection())
+                {
+                    con.Open();
+
+                    using (SqlTransaction trx = con.BeginTransaction())
+                    {
+                        try
+                        {
+                            obj.identificacion = id_credito_materiales.ToString();
+                            obj.proceso = "ALTA CREDITO MATERIALES";
+                           // obj.detalle = JsonConvert.SerializeObject(CM_Credito_materiales.getByPk(id_credito_materiales, legajo));
+                            obj.detalle = "";
+                            obj.observaciones = string.Format("Fecha auditoria: {0}", DateTime.Now);
+                            Entities.CM_Credito_materiales.AltaCredito( id_credito_materiales, con, trx);
                             AuditoriaD.InsertAuditoria(obj, con, trx);
                             trx.Commit();
                         }
@@ -207,7 +262,7 @@ namespace CreditosApi.Services
             int cantCuotas = obj.cant_cuotas;
             Decimal presupuesto = obj.presupuesto;
 
-            Decimal MontoXCuota = presupuesto / cantCuotas;
+            Decimal MontoXCuota = Math.Floor(presupuesto / cantCuotas);
 
             for (int i = 0; i < cantCuotas; i++)
             {
@@ -216,8 +271,8 @@ namespace CreditosApi.Services
                 ctacte.fecha_trasaccion = DateTime.Now;
                 ctacte.id_credito_materiales = idGenerado;
                 ctacte.periodo = GeneradorPeriodo.GeneradorPeriodoXCuota(i);
-                ctacte.monto_original = MontoXCuota;
-                ctacte.debe = MontoXCuota;
+                ctacte.monto_original = MontoXCuota; // aca en UVA con el primer valor del UVA
+                ctacte.debe = MontoXCuota; /// Y Este ya en pesos ?
                 ctacte.categoria_deuda = 1; // Por ahora lo hardcodeo, despeus lo mando por params
                 ctacte.vencimiento = DateTime.Now.AddMonths(i + 1);
 
@@ -287,7 +342,33 @@ namespace CreditosApi.Services
 
         }
 
+// Setter presupuesto Uva, es decir, del presupuesto total lo divido por el monto del valor del uva actual
 
+// setter en valor de cuota uva, es del anterior dividirlo por la cantidad de cuotas 
+
+    // PRESUPUESTO UVA INICIAL
+    public decimal CalculoPresupuestoUVA(decimal presupuesto){
+
+        decimal valor_uva = CM_UVA.GetUltimaFila().valor_uva;
+        decimal presupuesto_uva = presupuesto/valor_uva;
+        
+        return presupuesto_uva;
+    }
+
+    // Para settear al valor de la cuota UVA
+    public decimal ValorCuotaUVA(decimal presupuesto_uva, int cant_cuotas){
+
+        return presupuesto_uva/cant_cuotas;
+    }
+
+    // Agarras la deuda cuota de UVA (en UVAS) y la multiplicas por el monto de la unidad del uva para obtener lo que se debe
+
+    public decimal MontoCuotaUva(decimal valor_cuota_uva){
+
+        decimal valor_uva = CM_UVA.GetUltimaFila().valor_uva;
+        return valor_cuota_uva*valor_uva;
+
+    }
 
     }
 }

@@ -156,7 +156,7 @@ namespace CreditosApi.Entities
                 StringBuilder sql = new StringBuilder();
                 sql.AppendLine("SELECT *FROM Cm_credito_materiales WHERE");
                 sql.AppendLine("id_credito_materiales = @id_credito_materiales");
-                sql.AppendLine("AND legajo = @legajo");
+                //sql.AppendLine("AND legajo = @legajo");
                 CM_Credito_materiales obj = null;
                 using (SqlConnection con = GetConnection())
                 {
@@ -164,7 +164,7 @@ namespace CreditosApi.Entities
                     cmd.CommandType = CommandType.Text;
                     cmd.CommandText = sql.ToString();
                     cmd.Parameters.AddWithValue("@id_credito_materiales", id_credito_materiales);
-                    cmd.Parameters.AddWithValue("@legajo", legajo);
+                    //cmd.Parameters.AddWithValue("@legajo", legajo);
                     cmd.Connection.Open();
                     SqlDataReader dr = cmd.ExecuteReader();
                     List<CM_Credito_materiales> lst = mapeo(dr);
@@ -434,7 +434,8 @@ namespace CreditosApi.Entities
             {
                 StringBuilder sql = new StringBuilder();
                 sql.AppendLine("UPDATE  Cm_credito_materiales SET");
-                sql.AppendLine(" domicilio = @domicilio");
+                sql.AppendLine("  legajo = @legajo");
+                sql.AppendLine(", domicilio = @domicilio");
                 sql.AppendLine(", fecha_alta = @fecha_alta");
                 sql.AppendLine(", baja = @baja");
                 sql.AppendLine(", fecha_baja = @fecha_baja");
@@ -457,13 +458,13 @@ namespace CreditosApi.Entities
                 sql.AppendLine(", p_h = @p_h");
                 sql.AppendLine("WHERE");
                 sql.AppendLine("id_credito_materiales = @id_credito_materiales");
-                sql.AppendLine("AND legajo = @legajo");
+                //sql.AppendLine("AND legajo = @legajo");
 
                 using (SqlCommand cmd = new SqlCommand(sql.ToString(), con, trx))
                 {
                     cmd.CommandType = CommandType.Text;
 
-                    cmd.Parameters.AddWithValue("@legajo", legajo);
+                    cmd.Parameters.AddWithValue("@legajo", obj.legajo);
                     cmd.Parameters.AddWithValue("@domicilio", obj.domicilio);
                     cmd.Parameters.AddWithValue("@fecha_alta", obj.fecha_alta);
                     cmd.Parameters.AddWithValue("@baja", obj.baja);
@@ -505,14 +506,14 @@ namespace CreditosApi.Entities
                 sql.AppendLine("DELETE  Cm_credito_materiales ");
                 sql.AppendLine("WHERE");
                 sql.AppendLine("id_credito_materiales=@id_credito_materiales");
-                sql.AppendLine("AND legajo=@legajo");
+                //sql.AppendLine("AND legajo=@legajo");
 
                 SqlCommand cmd = con.CreateCommand();
                 cmd.Transaction = trx;
                 cmd.CommandType = CommandType.Text;
                 cmd.CommandText = sql.ToString();
                 cmd.Parameters.AddWithValue("@id_credito_materiales", id_credito_materiales);
-                cmd.Parameters.AddWithValue("@legajo", legajo);
+                //cmd.Parameters.AddWithValue("@legajo", legajo);
                 //cmd.Connection.Open();
                 cmd.ExecuteNonQuery();
 
@@ -533,7 +534,7 @@ namespace CreditosApi.Entities
                 sql.AppendLine("SET baja = @baja,");
                 sql.AppendLine("fecha_baja = @fecha_baja");
                 sql.AppendLine("WHERE id_credito_materiales = @id_credito_materiales");
-                sql.AppendLine("AND legajo = @legajo");
+                //sql.AppendLine("AND legajo = @legajo");
 
                 using (SqlCommand cmd = new SqlCommand(sql.ToString(), con, trx))
                 {
@@ -541,7 +542,7 @@ namespace CreditosApi.Entities
                     cmd.Parameters.AddWithValue("@baja", 1);
                     cmd.Parameters.AddWithValue("@fecha_baja", DateTime.Now);
                     cmd.Parameters.AddWithValue("@id_credito_materiales", id_credito_materiales);
-                    cmd.Parameters.AddWithValue("@legajo", legajo);
+                    //cmd.Parameters.AddWithValue("@legajo", legajo);
 
                     cmd.ExecuteNonQuery();
                 }

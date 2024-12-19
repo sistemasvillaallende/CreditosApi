@@ -10,6 +10,7 @@ namespace CreditosApi.Services
         public void InsertNuevaDeuda(Credito_CtasctesAuditoria obj);
         public void DeleteDeudaCtaCte(int tipo_transaccion, int nro_transaccion, Auditoria obj);
         public List<LstDeudaCredito> getListDeudaCredito(int id_credito_materiales);
+        public List<LstDeudaCredito> GetListTodasDeudas(int id_credito_materiales);
 
 
     }

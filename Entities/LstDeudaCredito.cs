@@ -64,7 +64,7 @@ namespace CreditosApi.Entities
                             AND C.nro_plan IS NULL
                             AND C.nro_procuracion IS NULL
                             AND C.id_credito_materiales = @id_credito_materiales";
-                            // AND vencimiento <= GETDATE() ORDER BY C.periodo ASC";
+            // AND vencimiento <= GETDATE() ORDER BY C.periodo ASC";
 
 
             cmd = new SqlCommand();
@@ -91,8 +91,10 @@ namespace CreditosApi.Entities
                     if (!dr.IsDBNull(dr.GetOrdinal("debe")))
                     { oCredito.importe = dr.GetDecimal(dr.GetOrdinal("debe")); }
                     if (!dr.IsDBNull(dr.GetOrdinal("vencimiento")))
-                    {   oCredito.fecha_vencimiento = dr.GetDateTime(
-                        dr.GetOrdinal("vencimiento")).ToShortDateString();}
+                    {
+                        oCredito.fecha_vencimiento = dr.GetDateTime(
+                        dr.GetOrdinal("vencimiento")).ToShortDateString();
+                    }
                     if (!dr.IsDBNull(dr.GetOrdinal("des_categoria")))
                     { oCredito.desCategoria = dr.GetString(dr.GetOrdinal("des_categoria")); }
                     if (!dr.IsDBNull(dr.GetOrdinal("pagado")))
@@ -123,7 +125,100 @@ namespace CreditosApi.Entities
             finally { cn.Close(); }
             return oLstCredito;
         }
-       
-        
+
+        public static List<LstDeudaCredito> GetListTodasDeudas(int id_credito_materiales)
+        {
+            List<LstDeudaCredito> oLstCredito = new List<LstDeudaCredito>();
+            SqlCommand cmd;
+            SqlDataReader dr;
+            SqlConnection cn = null;
+
+            string sql = @"
+                       SELECT C.periodo, C.monto_original, C.debe -
+                            (SELECT SUM(haber) 
+                             FROM CM_CTASCTES_CREDITO_MATERIALES C2 
+                             WHERE
+                                C2.nro_transaccion=C.nro_transaccion ) as debe,
+                            C.vencimiento, b.des_categoria,
+                            C.pagado, C.nro_transaccion, C.categoria_deuda, C.nro_cedulon_paypertic,
+                            C.recargo,
+                            C.pago_parcial, 
+                            (SELECT SUM(haber) 
+                             FROM CM_CTASCTES_CREDITO_MATERIALES C2 
+                             WHERE
+                                C2.nro_transaccion=C.nro_transaccion) as pago_a_cuenta, 
+                            C.NRO_PROCURACION
+                        FROM CM_CTASCTES_CREDITO_MATERIALES C
+                        INNER JOIN CM_CATE_DEUDA_CREDITO_MATERIALES b on C.categoria_deuda = b.cod_categoria
+                        WHERE
+                            C.tipo_transaccion = 1
+                            AND C.nro_plan IS NULL
+                            AND C.nro_procuracion IS NULL
+                            AND C.id_credito_materiales = @id_credito_materiales";
+            // AND vencimiento <= GETDATE() ORDER BY C.periodo ASC";
+
+
+            cmd = new SqlCommand();
+
+            cmd.Parameters.AddWithValue("@id_credito_materiales", id_credito_materiales);
+            try
+            {
+                cn = DALBase.GetConnection();
+
+                cmd.Connection = cn;
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = sql;
+                cmd.Connection.Open();
+
+                dr = cmd.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    LstDeudaCredito oCredito = new LstDeudaCredito();
+                    if (!dr.IsDBNull(dr.GetOrdinal("periodo")))
+                    { oCredito.periodo = dr.GetString(dr.GetOrdinal("periodo")); }
+                    if (!dr.IsDBNull(dr.GetOrdinal("monto_original")))
+                    { oCredito.deudaOriginal = dr.GetDecimal(dr.GetOrdinal("monto_original")); }
+                    if (!dr.IsDBNull(dr.GetOrdinal("debe")))
+                    { oCredito.importe = dr.GetDecimal(dr.GetOrdinal("debe")); }
+                    if (!dr.IsDBNull(dr.GetOrdinal("vencimiento")))
+                    {
+                        oCredito.fecha_vencimiento = dr.GetDateTime(
+                        dr.GetOrdinal("vencimiento")).ToShortDateString();
+                    }
+                    if (!dr.IsDBNull(dr.GetOrdinal("des_categoria")))
+                    { oCredito.desCategoria = dr.GetString(dr.GetOrdinal("des_categoria")); }
+                    if (!dr.IsDBNull(dr.GetOrdinal("pagado")))
+                    { oCredito.pagado = Convert.ToInt16(dr.GetBoolean(dr.GetOrdinal("pagado"))); }
+                    if (!dr.IsDBNull(dr.GetOrdinal("nro_transaccion")))
+                    { oCredito.nro_transaccion = dr.GetInt32(dr.GetOrdinal("nro_transaccion")); }
+                    if (!dr.IsDBNull(dr.GetOrdinal("categoria_deuda")))
+                    { oCredito.categoria_deuda = dr.GetInt32(dr.GetOrdinal("categoria_deuda")); }
+                    if (!dr.IsDBNull(dr.GetOrdinal("recargo")))
+                    { oCredito.intereses = dr.GetDecimal(dr.GetOrdinal("recargo")); }
+                    if (!dr.IsDBNull(dr.GetOrdinal("nro_cedulon_paypertic")))
+                    { oCredito.nro_cedulon_paypertic = dr.GetInt32(dr.GetOrdinal("nro_cedulon_paypertic")); }
+                    if (!dr.IsDBNull(dr.GetOrdinal("pago_parcial")))
+                    { oCredito.pago_parcial = dr.GetBoolean(dr.GetOrdinal("pago_parcial")); }
+                    if (!dr.IsDBNull(dr.GetOrdinal("pago_a_cuenta")))
+                    { oCredito.pago_a_cuenta = dr.GetDecimal(dr.GetOrdinal("pago_a_cuenta")); }
+                    if (!dr.IsDBNull(dr.GetOrdinal("NRO_PROCURACION")))
+                    { oCredito.nro_proc = dr.GetInt32(dr.GetOrdinal("NRO_PROCURACION")); }
+
+                    oLstCredito.Add(oCredito);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error in query!" + e.ToString());
+                throw e;
+            }
+            finally { cn.Close(); }
+            return oLstCredito;
+        }
+
+
+
+
     }
 }

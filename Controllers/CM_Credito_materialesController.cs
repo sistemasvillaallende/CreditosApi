@@ -14,11 +14,14 @@ namespace CreditosApi.Controllers
     {
 
         private ICM_Credito_materialesServices _CM_Credito_materialesService;
+        private ICM_Ctasctes_credito_materialesServices _CM_CtasctesServices;
 
 
-        public CM_Credito_materialesController(ICM_Credito_materialesServices CM_Credito_MaterialesServices)
+        public CM_Credito_materialesController(ICM_Credito_materialesServices CM_Credito_MaterialesServices
+        , ICM_Ctasctes_credito_materialesServices CM_CtasctesServices)
         {
             _CM_Credito_materialesService = CM_Credito_MaterialesServices;
+            _CM_CtasctesServices = CM_CtasctesServices;
         }
 
         [HttpGet]
@@ -62,9 +65,17 @@ namespace CreditosApi.Controllers
         {
             try
             {
+                var lstCtactes = _CM_CtasctesServices.GetListTodasDeudas(id_credito_materiales);
+
+                if (lstCtactes.Any(cta => cta.pagado == 1))
+                {
+
+                    return BadRequest(new { message = "No se puede modificar credito por presentar almenos una cuota pagada" });
+                }
+
                 _CM_Credito_materialesService.UpdateCredito(legajo, id_credito_materiales, obj);
 
-                return Ok(new { message = $"Se ha modificado el credito con legajo {legajo} ." });
+                return Ok(new { message = $"Se ha modificado el credito con id : {id_credito_materiales} ." });
             }
             catch (Exception ex)
             {
@@ -78,6 +89,13 @@ namespace CreditosApi.Controllers
         {
             try
             {
+                var lstCtactes = _CM_CtasctesServices.GetListTodasDeudas(id_credito_materiales);
+
+                if (lstCtactes.Any(cta => cta.pagado == 1))
+                {
+                    return BadRequest(new { message = "No se puede dar de baja el  credito por presentar almenos una cuota pagada" });
+                }
+
                 _CM_Credito_materialesService.BajaCredito(legajo, id_credito_materiales, obj);
 
                 return Ok(new { message = $"Se ha dado de baja correctamente el credito con legajo {legajo} ." });
@@ -108,6 +126,13 @@ namespace CreditosApi.Controllers
         {
             try
             {
+                var lstCtactes = _CM_CtasctesServices.GetListTodasDeudas(id_credito_materiales);
+
+                if (lstCtactes.Any(cta => cta.pagado == 1))
+                {
+                    return BadRequest(new { message = "No se puede eliminar credito por presentar almenos una cuota pagada" });
+                }
+
                 _CM_Credito_materialesService.DeleteCredito(legajo, id_credito_materiales, obj);
 
                 return Ok(new { message = $"Se ha eliminado correctamente el credito con legajo {legajo} ." });

@@ -176,5 +176,20 @@ namespace CreditosApi.Services
             }
         }
 
+
+        public List<LstDeudaCredito> GetListTodasDeudas(int id_credito_materiales){
+            try
+            {
+                var lst = LstDeudaCredito.GetListTodasDeudas(id_credito_materiales);
+                return lst;
+            }
+            catch (System.Exception)
+            {
+                
+                throw;
+            }
+        }
+
+
     }
 }

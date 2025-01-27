@@ -125,7 +125,7 @@ namespace CreditosApi.Services
                             obj.auditoria.detalle = JsonConvert.SerializeObject(obj.creditoMateriales);
                             obj.auditoria.observaciones = string.Format("Fecha auditoria: {0}", DateTime.Now);
 
-                            CM_Credito_materiales creditoActual = CM_Credito_materiales.getByPk(id_credito_materiales, legajo);
+                            CM_Credito_materiales creditoActual = CM_Credito_materiales.getByPk(id_credito_materiales, legajo); // Sacando legajo 
 
                             // Actualiza los datos actuales del credito 
                             Entities.CM_Credito_materiales.Update(legajo, id_credito_materiales, obj.creditoMateriales, con, trx);
@@ -263,7 +263,7 @@ namespace CreditosApi.Services
             int cantCuotas = obj.cant_cuotas;
             Decimal presupuesto = obj.presupuesto;
 
-            Decimal MontoXCuota = Math.Floor(presupuesto / cantCuotas);
+            Decimal MontoXCuota = Math.Ceiling(presupuesto / cantCuotas); // Ceiling y floor
 
             for (int i = 0; i < cantCuotas; i++)
             {
@@ -303,7 +303,7 @@ namespace CreditosApi.Services
         {
 
             List<CM_Ctasctes_credito_materiales> cuotasActuales = CM_Ctasctes_credito_materiales.GetListCtaCteById(creditoActual.id_credito_materiales, con, trx);
-            decimal montoPorCuotaNuevo = presupuestoNvo / cuotasNvas;
+            decimal montoPorCuotaNuevo = Math.Ceiling(presupuestoNvo / cuotasNvas);
 
 
             if (cuotasNvas > cuotasActuales.Count())

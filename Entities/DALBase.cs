@@ -9,7 +9,7 @@ namespace CreditosApi.Entities
 
         }
 
-        private static string DBMain = @"Data Source=10.0.0.23; Initial Catalog=SIIMVA; 
+        private static string DBMain = @"Data Source=10.0.0.8; Initial Catalog=SIIMVA; 
                                   Persist Security Info=True; 
                                   User ID=general; 
                                   Min Pool Size=0;

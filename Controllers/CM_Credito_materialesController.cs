@@ -1,6 +1,7 @@
 using CreditosApi.Entities.AUDITORIA;
 using CreditosApi.Entities.HELPERS;
 using CreditosApi.Helpers;
+using CreditosApi.Model;
 using CreditosApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,10 +42,11 @@ namespace CreditosApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult InsertNuevoCredito(Credito_materialesAuditoria obj)
+        public IActionResult InsertNuevoCredito(CreditosModel obj)
         {
             try
             {
+
                 _CM_Credito_materialesService.InsertNuevoCredito(obj);
 
                 return Ok(new { message = "Se ha insertado nuevo credito." });

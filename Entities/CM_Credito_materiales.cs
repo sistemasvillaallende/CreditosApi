@@ -209,7 +209,7 @@ namespace CreditosApi.Entities
             }
         }
 
-        public static int insert(CM_Credito_materiales obj)
+        public static int insert(Model.CreditosModel obj)
         {
             try
             {
@@ -217,21 +217,21 @@ namespace CreditosApi.Entities
                 sql.AppendLine("INSERT INTO Cm_credito_materiales(");
                 sql.AppendLine("legajo");
                 sql.AppendLine(", domicilio");
-                sql.AppendLine(", fecha_alta");
-                sql.AppendLine(", baja");
-                sql.AppendLine(", fecha_baja");
+                //sql.AppendLine(", fecha_alta");
+                //sql.AppendLine(", baja");
+                //sql.AppendLine(", fecha_baja");
                 sql.AppendLine(", cuit_solicitante");
                 sql.AppendLine(", garantes");
                 sql.AppendLine(", presupuesto");
-                sql.AppendLine(", presupuesto_uva");
+                //sql.AppendLine(", presupuesto_uva");
                 sql.AppendLine(", cant_cuotas");
-                sql.AppendLine(", valor_cuota_uva");
-                sql.AppendLine(", id_uva");
-                sql.AppendLine(", id_estado");
-                sql.AppendLine(", per_ultimo");
-                sql.AppendLine(", con_deuda");
-                sql.AppendLine(", saldo_adeudado");
-                sql.AppendLine(", proximo_vencimiento");
+                //sql.AppendLine(", valor_cuota_uva");
+                //sql.AppendLine(", id_uva");
+                //sql.AppendLine(", id_estado");
+                //sql.AppendLine(", per_ultimo");
+                //sql.AppendLine(", con_deuda");
+                //sql.AppendLine(", saldo_adeudado");
+                //sql.AppendLine(", proximo_vencimiento");
                 sql.AppendLine(", circunscripcion");
                 sql.AppendLine(", seccion");
                 sql.AppendLine(", manzana");
@@ -242,21 +242,21 @@ namespace CreditosApi.Entities
                 sql.AppendLine("(");
                 sql.AppendLine("@legajo");
                 sql.AppendLine(", @domicilio");
-                sql.AppendLine(", @fecha_alta");
-                sql.AppendLine(", @baja");
-                sql.AppendLine(", @fecha_baja");
+                //sql.AppendLine(", @fecha_alta");
+                //sql.AppendLine(", @baja");
+                //sql.AppendLine(", @fecha_baja");
                 sql.AppendLine(", @cuit_solicitante");
                 sql.AppendLine(", @garantes");
                 sql.AppendLine(", @presupuesto");
-                sql.AppendLine(", @presupuesto_uva");
-                sql.AppendLine(", @cant_cuotas");
-                sql.AppendLine(", @valor_cuota_uva");
-                sql.AppendLine(", @id_uva");
-                sql.AppendLine(", @id_estado");
-                sql.AppendLine(", @per_ultimo");
-                sql.AppendLine(", @con_deuda");
-                sql.AppendLine(", @saldo_adeudado");
-                sql.AppendLine(", @proximo_vencimiento");
+                //sql.AppendLine(", @presupuesto_uva");
+                //sql.AppendLine(", @cant_cuotas");
+                //sql.AppendLine(", @valor_cuota_uva");
+                //sql.AppendLine(", @id_uva");
+                //sql.AppendLine(", @id_estado");
+                //sql.AppendLine(", @per_ultimo");
+                //sql.AppendLine(", @con_deuda");
+                //sql.AppendLine(", @saldo_adeudado");
+                //sql.AppendLine(", @proximo_vencimiento");
                 sql.AppendLine(", @circunscripcion");
                 sql.AppendLine(", @seccion");
                 sql.AppendLine(", @manzana");
@@ -271,21 +271,21 @@ namespace CreditosApi.Entities
                     cmd.CommandText = sql.ToString();
                     cmd.Parameters.AddWithValue("@legajo", obj.legajo);
                     cmd.Parameters.AddWithValue("@domicilio", obj.domicilio);
-                    cmd.Parameters.AddWithValue("@fecha_alta", obj.fecha_alta);
-                    cmd.Parameters.AddWithValue("@baja", obj.baja);
-                    cmd.Parameters.AddWithValue("@fecha_baja", obj.fecha_baja);
+                    //cmd.Parameters.AddWithValue("@fecha_alta", obj.fecha_alta);
+                    //cmd.Parameters.AddWithValue("@baja", obj.baja);
+                    //cmd.Parameters.AddWithValue("@fecha_baja", obj.fecha_baja);
                     cmd.Parameters.AddWithValue("@cuit_solicitante", obj.cuit_solicitante);
                     cmd.Parameters.AddWithValue("@garantes", obj.garantes);
                     cmd.Parameters.AddWithValue("@presupuesto", obj.presupuesto);
-                    cmd.Parameters.AddWithValue("@presupuesto_uva", obj.presupuesto_uva);
+                    //cmd.Parameters.AddWithValue("@presupuesto_uva", obj.presupuesto_uva);
                     cmd.Parameters.AddWithValue("@cant_cuotas", obj.cant_cuotas);
-                    cmd.Parameters.AddWithValue("@valor_cuota_uva", obj.valor_cuota_uva);
-                    cmd.Parameters.AddWithValue("@id_uva", obj.id_uva);
-                    cmd.Parameters.AddWithValue("@id_estado", obj.id_estado);
-                    cmd.Parameters.AddWithValue("@per_ultimo", obj.per_ultimo);
-                    cmd.Parameters.AddWithValue("@con_deuda", obj.con_deuda);
-                    cmd.Parameters.AddWithValue("@saldo_adeudado", obj.saldo_adeudado);
-                    cmd.Parameters.AddWithValue("@proximo_vencimiento", obj.proximo_vencimiento);
+                    //cmd.Parameters.AddWithValue("@valor_cuota_uva", obj.valor_cuota_uva);
+                    //cmd.Parameters.AddWithValue("@id_uva", obj.id_uva);
+                    //cmd.Parameters.AddWithValue("@id_estado", obj.id_estado);
+                    //cmd.Parameters.AddWithValue("@per_ultimo", obj.per_ultimo);
+                    //cmd.Parameters.AddWithValue("@con_deuda", obj.con_deuda);
+                    //cmd.Parameters.AddWithValue("@saldo_adeudado", obj.saldo_adeudado);
+                    //cmd.Parameters.AddWithValue("@proximo_vencimiento", obj.proximo_vencimiento);
                     cmd.Parameters.AddWithValue("@circunscripcion", obj.circunscripcion);
                     cmd.Parameters.AddWithValue("@seccion", obj.seccion);
                     cmd.Parameters.AddWithValue("@manzana", obj.manzana);

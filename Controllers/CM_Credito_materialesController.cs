@@ -42,11 +42,10 @@ namespace CreditosApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult InsertNuevoCredito(CreditosModel obj)
+        public IActionResult InsertNuevoCredito(Credito_materialesAuditoria obj)
         {
             try
             {
-
                 _CM_Credito_materialesService.InsertNuevoCredito(obj);
 
                 return Ok(new { message = "Se ha insertado nuevo credito." });

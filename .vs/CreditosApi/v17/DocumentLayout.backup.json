@@ -3,44 +3,48 @@
   "WorkspaceRootPath": "D:\\Dev\\NET2022\\CreditosApi\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{1553941B-A071-47E1-850D-D1654689BA13}|CreditosApi.csproj|d:\\dev\\net2022\\creditosapi\\entities\\cm_credito_materiales.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1553941B-A071-47E1-850D-D1654689BA13}|CreditosApi.csproj|solutionrelative:entities\\cm_credito_materiales.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{33E728D5-DD5C-459D-ABB9-8BB85540B4E5}|CreditosApi.csproj|d:\\dev\\net2022\\creditosapi\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{33E728D5-DD5C-459D-ABB9-8BB85540B4E5}|CreditosApi.csproj|solutionrelative:startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1553941B-A071-47E1-850D-D1654689BA13}|CreditosApi.csproj|d:\\dev\\net2022\\creditosapi\\entities\\vecino_digital.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1553941B-A071-47E1-850D-D1654689BA13}|CreditosApi.csproj|solutionrelative:entities\\vecino_digital.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{33E728D5-DD5C-459D-ABB9-8BB85540B4E5}|CreditosApi.csproj|d:\\dev\\net2022\\creditosapi\\entities\\cm_ctasctes_credito_materiales.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{33E728D5-DD5C-459D-ABB9-8BB85540B4E5}|CreditosApi.csproj|solutionrelative:entities\\cm_ctasctes_credito_materiales.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1553941B-A071-47E1-850D-D1654689BA13}|CreditosApi.csproj|d:\\dev\\net2022\\creditosapi\\entities\\dalbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1553941B-A071-47E1-850D-D1654689BA13}|CreditosApi.csproj|solutionrelative:entities\\dalbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{33E728D5-DD5C-459D-ABB9-8BB85540B4E5}|CreditosApi.csproj|d:\\dev\\net2022\\creditosapi\\entities\\cm_credito_materiales.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{33E728D5-DD5C-459D-ABB9-8BB85540B4E5}|CreditosApi.csproj|solutionrelative:entities\\cm_credito_materiales.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1553941B-A071-47E1-850D-D1654689BA13}|CreditosApi.csproj|d:\\dev\\net2022\\creditosapi\\entities\\cm_detalle_deuda_credito_materiales.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1553941B-A071-47E1-850D-D1654689BA13}|CreditosApi.csproj|solutionrelative:entities\\cm_detalle_deuda_credito_materiales.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{33E728D5-DD5C-459D-ABB9-8BB85540B4E5}|CreditosApi.csproj|d:\\dev\\net2022\\creditosapi\\entities\\vecino_digital.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{33E728D5-DD5C-459D-ABB9-8BB85540B4E5}|CreditosApi.csproj|solutionrelative:entities\\vecino_digital.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1553941B-A071-47E1-850D-D1654689BA13}|CreditosApi.csproj|d:\\dev\\net2022\\creditosapi\\entities\\cm_ctasctes_credito_materiales.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1553941B-A071-47E1-850D-D1654689BA13}|CreditosApi.csproj|solutionrelative:entities\\cm_ctasctes_credito_materiales.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{33E728D5-DD5C-459D-ABB9-8BB85540B4E5}|CreditosApi.csproj|d:\\dev\\net2022\\creditosapi\\entities\\cm_detalle_deuda_credito_materiales.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{33E728D5-DD5C-459D-ABB9-8BB85540B4E5}|CreditosApi.csproj|solutionrelative:entities\\cm_detalle_deuda_credito_materiales.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1553941B-A071-47E1-850D-D1654689BA13}|CreditosApi.csproj|d:\\dev\\net2022\\creditosapi\\entities\\cm_conceptos_credito_materiales.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1553941B-A071-47E1-850D-D1654689BA13}|CreditosApi.csproj|solutionrelative:entities\\cm_conceptos_credito_materiales.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{33E728D5-DD5C-459D-ABB9-8BB85540B4E5}|CreditosApi.csproj|d:\\dev\\net2022\\creditosapi\\entities\\cm_conceptos_credito_materiales.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{33E728D5-DD5C-459D-ABB9-8BB85540B4E5}|CreditosApi.csproj|solutionrelative:entities\\cm_conceptos_credito_materiales.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1553941B-A071-47E1-850D-D1654689BA13}|CreditosApi.csproj|d:\\dev\\net2022\\creditosapi\\entities\\cm_cate_deuda_credito_materiales.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1553941B-A071-47E1-850D-D1654689BA13}|CreditosApi.csproj|solutionrelative:entities\\cm_cate_deuda_credito_materiales.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{33E728D5-DD5C-459D-ABB9-8BB85540B4E5}|CreditosApi.csproj|d:\\dev\\net2022\\creditosapi\\creditosapi.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{33E728D5-DD5C-459D-ABB9-8BB85540B4E5}|CreditosApi.csproj|solutionrelative:creditosapi.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1553941B-A071-47E1-850D-D1654689BA13}|CreditosApi.csproj|d:\\dev\\net2022\\creditosapi\\creditosapi.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{1553941B-A071-47E1-850D-D1654689BA13}|CreditosApi.csproj|solutionrelative:creditosapi.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+      "AbsoluteMoniker": "D:0:0:{33E728D5-DD5C-459D-ABB9-8BB85540B4E5}|CreditosApi.csproj|d:\\dev\\net2022\\creditosapi\\entities\\dalbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{33E728D5-DD5C-459D-ABB9-8BB85540B4E5}|CreditosApi.csproj|solutionrelative:entities\\dalbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1553941B-A071-47E1-850D-D1654689BA13}|CreditosApi.csproj|d:\\dev\\net2022\\creditosapi\\weatherforecast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1553941B-A071-47E1-850D-D1654689BA13}|CreditosApi.csproj|solutionrelative:weatherforecast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{33E728D5-DD5C-459D-ABB9-8BB85540B4E5}|CreditosApi.csproj|d:\\dev\\net2022\\creditosapi\\entities\\cm_cate_deuda_credito_materiales.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{33E728D5-DD5C-459D-ABB9-8BB85540B4E5}|CreditosApi.csproj|solutionrelative:entities\\cm_cate_deuda_credito_materiales.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1553941B-A071-47E1-850D-D1654689BA13}|CreditosApi.csproj|d:\\dev\\net2022\\creditosapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1553941B-A071-47E1-850D-D1654689BA13}|CreditosApi.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{33E728D5-DD5C-459D-ABB9-8BB85540B4E5}|CreditosApi.csproj|d:\\dev\\net2022\\creditosapi\\weatherforecast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{33E728D5-DD5C-459D-ABB9-8BB85540B4E5}|CreditosApi.csproj|solutionrelative:weatherforecast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{33E728D5-DD5C-459D-ABB9-8BB85540B4E5}|CreditosApi.csproj|d:\\dev\\net2022\\creditosapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{33E728D5-DD5C-459D-ABB9-8BB85540B4E5}|CreditosApi.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -50,7 +54,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 20,
+          "SelectedChildIndex": 18,
           "Children": [
             {
               "$type": "Bookmark",
@@ -121,8 +125,25 @@
               "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
+              "Title": "Startup.cs",
+              "DocumentMoniker": "D:\\Dev\\NET2022\\CreditosApi\\Startup.cs",
+              "RelativeDocumentMoniker": "Startup.cs",
+              "ToolTip": "D:\\Dev\\NET2022\\CreditosApi\\Startup.cs",
+              "RelativeToolTip": "Startup.cs",
+              "ViewState": "AgIAACwAAAAAAAAAAAAIwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-05T22:58:14.631Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "Vecino_digital.cs",
               "DocumentMoniker": "D:\\Dev\\NET2022\\CreditosApi\\Entities\\Vecino_digital.cs",
               "RelativeDocumentMoniker": "Entities\\Vecino_digital.cs",
@@ -130,12 +151,11 @@
               "RelativeToolTip": "Entities\\Vecino_digital.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-29T12:08:57.008Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-29T12:08:57.008Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "CM_Detalle_deuda_credito_materiales.cs",
               "DocumentMoniker": "D:\\Dev\\NET2022\\CreditosApi\\Entities\\CM_Detalle_deuda_credito_materiales.cs",
               "RelativeDocumentMoniker": "Entities\\CM_Detalle_deuda_credito_materiales.cs",
@@ -147,28 +167,28 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 1,
               "Title": "CM_Ctasctes_credito_materiales.cs",
               "DocumentMoniker": "D:\\Dev\\NET2022\\CreditosApi\\Entities\\CM_Ctasctes_credito_materiales.cs",
               "RelativeDocumentMoniker": "Entities\\CM_Ctasctes_credito_materiales.cs",
               "ToolTip": "D:\\Dev\\NET2022\\CreditosApi\\Entities\\CM_Ctasctes_credito_materiales.cs",
               "RelativeToolTip": "Entities\\CM_Ctasctes_credito_materiales.cs",
-              "ViewState": "AgIAABoAAAAAAAAAAAA6wCQAAAA2AAAAAAAAAA==",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAiwCQAAAA2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-28T13:06:17.932Z"
+              "WhenOpened": "2024-11-28T13:06:17.932Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "CM_Credito_materiales.cs",
               "DocumentMoniker": "D:\\Dev\\NET2022\\CreditosApi\\Entities\\CM_Credito_materiales.cs",
               "RelativeDocumentMoniker": "Entities\\CM_Credito_materiales.cs",
               "ToolTip": "D:\\Dev\\NET2022\\CreditosApi\\Entities\\CM_Credito_materiales.cs",
               "RelativeToolTip": "Entities\\CM_Credito_materiales.cs",
-              "ViewState": "AgIAAAMBAAAAAAAAAAAswAgBAABBAAAAAAAAAA==",
+              "ViewState": "AgIAAAMBAAAAAAAAAAAswCQBAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-28T13:06:08.495Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-28T13:06:08.495Z"
             },
             {
               "$type": "Document",
@@ -184,7 +204,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 6,
               "Title": "CreditosApi.csproj",
               "DocumentMoniker": "D:\\Dev\\NET2022\\CreditosApi\\CreditosApi.csproj",
               "RelativeDocumentMoniker": "CreditosApi.csproj",
@@ -196,7 +216,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 7,
               "Title": "DALBase.cs",
               "DocumentMoniker": "D:\\Dev\\NET2022\\CreditosApi\\Entities\\DALBase.cs",
               "RelativeDocumentMoniker": "Entities\\DALBase.cs",
@@ -204,12 +224,11 @@
               "RelativeToolTip": "Entities\\DALBase.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-28T12:49:39.865Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-28T12:49:39.865Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "CM_Cate_deuda_credito_materiales.cs",
               "DocumentMoniker": "D:\\Dev\\NET2022\\CreditosApi\\Entities\\CM_Cate_deuda_credito_materiales.cs",
               "RelativeDocumentMoniker": "Entities\\CM_Cate_deuda_credito_materiales.cs",
@@ -221,7 +240,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "WeatherForecast.cs",
               "DocumentMoniker": "D:\\Dev\\NET2022\\CreditosApi\\WeatherForecast.cs",
               "RelativeDocumentMoniker": "WeatherForecast.cs",
@@ -233,7 +252,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\Dev\\NET2022\\CreditosApi\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",

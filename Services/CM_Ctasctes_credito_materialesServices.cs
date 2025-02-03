@@ -185,10 +185,24 @@ namespace CreditosApi.Services
             }
             catch (System.Exception)
             {
-                
                 throw;
             }
         }
+
+     public List<CM_Ctasctes_credito_materiales> GetListCtaCteById(int id_credito_materiales){
+        try
+        {
+                var lst = CM_Ctasctes_credito_materiales.GetListCtaCteById(id_credito_materiales);
+                return lst;
+            
+        }
+        catch (System.Exception)
+        {
+            
+            throw;
+        }
+     }
+
 
 
     }

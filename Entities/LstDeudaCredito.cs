@@ -1,6 +1,7 @@
 using System.Data.SqlClient;
 using System.Data;
 
+
 namespace CreditosApi.Entities
 {
     public class LstDeudaCredito : DALBase

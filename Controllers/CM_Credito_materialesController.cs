@@ -182,15 +182,12 @@ namespace CreditosApi.Controllers
         }
 
 
-
-
         [HttpGet]
         public IActionResult GetCreditoById(int id_credito_materiales)
         {
             try
             {
                 var credito = _CM_Credito_materialesService.GetCreditoById(id_credito_materiales);
-
 
                 if (credito == null)
                 {

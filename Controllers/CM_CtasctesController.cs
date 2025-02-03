@@ -65,11 +65,25 @@ namespace CreditosApi.Controllers
 
 
         [HttpGet]
-        public ActionResult  getListDeudaCredito(int id_credito_materiales)
+        public ActionResult getListDeudaCredito(int id_credito_materiales)
         {
             var Ctasctes = _CM_CtasctesService.getListDeudaCredito(id_credito_materiales);
 
             return Ok(Ctasctes);
+        }
+
+        [HttpGet]
+        public ActionResult getListCtasCtes(int id_credito_materiales)
+        {
+            try
+            {
+                var lst = _CM_CtasctesService.GetListCtaCteById(id_credito_materiales);
+                return Ok(lst);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Ocurrió un error al obtener lista de cta cte: " + ex.Message);
+            }
         }
 
     }

@@ -33,6 +33,7 @@ namespace CreditosApi.Entities
         public int manzana { get; set; }
         public int parcela { get; set; }
         public int p_h { get; set; }
+        public string nombre { get; set; }
 
 
         public CM_Credito_materiales()
@@ -60,6 +61,7 @@ namespace CreditosApi.Entities
             manzana = 0;
             parcela = 0;
             p_h = 0;
+            nombre = string.Empty;
         }
 
         private static List<CM_Credito_materiales> mapeo(SqlDataReader dr)
@@ -91,6 +93,7 @@ namespace CreditosApi.Entities
                 int manzana = dr.GetOrdinal("manzana");
                 int parcela = dr.GetOrdinal("parcela");
                 int p_h = dr.GetOrdinal("p_h");
+                int nombre = dr.GetOrdinal("nombre");
 
 
                 while (dr.Read())
@@ -119,6 +122,7 @@ namespace CreditosApi.Entities
                     if (!dr.IsDBNull(manzana)) { obj.manzana = dr.GetInt32(manzana); }
                     if (!dr.IsDBNull(parcela)) { obj.parcela = dr.GetInt32(parcela); }
                     if (!dr.IsDBNull(p_h)) { obj.p_h = dr.GetInt32(p_h); }
+                    if (!dr.IsDBNull(nombre)) { obj.nombre = dr.GetString(nombre); }
 
                     lst.Add(obj);
                 }
@@ -156,7 +160,6 @@ namespace CreditosApi.Entities
                 StringBuilder sql = new StringBuilder();
                 sql.AppendLine("SELECT *FROM Cm_credito_materiales WHERE");
                 sql.AppendLine("id_credito_materiales = @id_credito_materiales");
-                //sql.AppendLine("AND legajo = @legajo");
                 CM_Credito_materiales obj = null;
                 using (SqlConnection con = GetConnection())
                 {
@@ -164,7 +167,6 @@ namespace CreditosApi.Entities
                     cmd.CommandType = CommandType.Text;
                     cmd.CommandText = sql.ToString();
                     cmd.Parameters.AddWithValue("@id_credito_materiales", id_credito_materiales);
-                    //cmd.Parameters.AddWithValue("@legajo", legajo);
                     cmd.Connection.Open();
                     SqlDataReader dr = cmd.ExecuteReader();
                     List<CM_Credito_materiales> lst = mapeo(dr);
@@ -237,6 +239,7 @@ namespace CreditosApi.Entities
                 sql.AppendLine(", manzana");
                 sql.AppendLine(", parcela");
                 sql.AppendLine(", p_h");
+                sql.AppendLine(", nombre");
                 sql.AppendLine(")");
                 sql.AppendLine("VALUES");
                 sql.AppendLine("(");
@@ -262,6 +265,7 @@ namespace CreditosApi.Entities
                 sql.AppendLine(", @manzana");
                 sql.AppendLine(", @parcela");
                 sql.AppendLine(", @p_h");
+                sql.AppendLine(", @nombre");
                 sql.AppendLine(")");
                 sql.AppendLine("SELECT SCOPE_IDENTITY()");
                 using (SqlConnection con = GetConnection())
@@ -291,6 +295,7 @@ namespace CreditosApi.Entities
                     cmd.Parameters.AddWithValue("@manzana", obj.manzana);
                     cmd.Parameters.AddWithValue("@parcela", obj.parcela);
                     cmd.Parameters.AddWithValue("@p_h", obj.p_h);
+                    cmd.Parameters.AddWithValue("@nombre", obj.nombre);
 
                     cmd.Connection.Open();
                     return Convert.ToInt32(cmd.ExecuteScalar());
@@ -311,13 +316,13 @@ namespace CreditosApi.Entities
                 legajo, domicilio, fecha_alta, baja, fecha_baja, cuit_solicitante, 
                 garantes, presupuesto, presupuesto_uva, cant_cuotas, valor_cuota_uva, 
                 id_uva, id_estado, per_ultimo, con_deuda, saldo_adeudado, proximo_vencimiento, circunscripcion, 
-                seccion,manzana, parcela , p_h
+                seccion,manzana, parcela , p_h , nombre
             ) 
             VALUES (
                 @legajo, @domicilio, @fecha_alta, @baja, @fecha_baja, @cuit_solicitante, 
                 @garantes, @presupuesto, @presupuesto_uva, @cant_cuotas, @valor_cuota_uva, 
                 @id_uva, @id_estado, @per_ultimo, @con_deuda, @saldo_adeudado, @proximo_vencimiento,
-                @circunscripcion, @seccion, @manzana, @parcela, @p_h
+                @circunscripcion, @seccion, @manzana, @parcela, @p_h , @nombre
             );
             SELECT SCOPE_IDENTITY();
         ";
@@ -346,6 +351,7 @@ namespace CreditosApi.Entities
                     cmd.Parameters.AddWithValue("@manzana", obj.manzana);
                     cmd.Parameters.AddWithValue("@parcela", obj.parcela);
                     cmd.Parameters.AddWithValue("@p_h", obj.p_h);
+                    cmd.Parameters.AddWithValue("@nombre", obj.nombre);
 
                     object result = cmd.ExecuteScalar();
                     return Convert.ToInt32(result);
@@ -388,6 +394,7 @@ namespace CreditosApi.Entities
                 sql.AppendLine(", manzana = @manzana");
                 sql.AppendLine(", parcela = @parcela");
                 sql.AppendLine(", p_h = @p_h");
+                sql.AppendLine(", nombre = @nombre");
                 sql.AppendLine("WHERE");
                 sql.AppendLine("id_credito_materiales=@id_credito_materiales");
                 sql.AppendLine("AND legajo=@legajo");
@@ -418,6 +425,7 @@ namespace CreditosApi.Entities
                     cmd.Parameters.AddWithValue("@manzana", obj.manzana);
                     cmd.Parameters.AddWithValue("@parcela", obj.parcela);
                     cmd.Parameters.AddWithValue("@p_h", obj.p_h);
+                    cmd.Parameters.AddWithValue("@nombre", obj.nombre);
                     cmd.Connection.Open();
                     cmd.ExecuteNonQuery();
                 }
@@ -456,6 +464,7 @@ namespace CreditosApi.Entities
                 sql.AppendLine(", manzana = @manzana");
                 sql.AppendLine(", parcela = @parcela");
                 sql.AppendLine(", p_h = @p_h");
+                sql.AppendLine(", nombre = @nombre");
                 sql.AppendLine("WHERE");
                 sql.AppendLine("id_credito_materiales = @id_credito_materiales");
                 //sql.AppendLine("AND legajo = @legajo");
@@ -487,6 +496,7 @@ namespace CreditosApi.Entities
                     cmd.Parameters.AddWithValue("@parcela", obj.parcela);
                     cmd.Parameters.AddWithValue("@p_h", obj.p_h);
                     cmd.Parameters.AddWithValue("@id_credito_materiales", id_credito_materiales);
+                    cmd.Parameters.AddWithValue("@nombre", obj.nombre);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -553,7 +563,7 @@ namespace CreditosApi.Entities
             }
         }
 
-        public static void AltaCredito( int id_credito_materiales, SqlConnection con, SqlTransaction trx)
+        public static void AltaCredito(int id_credito_materiales, SqlConnection con, SqlTransaction trx)
         {
             try
             {
@@ -619,6 +629,10 @@ namespace CreditosApi.Entities
                     {
                         case "legajo":
                             sqlWhere += @" WHERE legajo LIKE @parametro + '%' 
+                               ";
+                            break;
+                        case "nombre":
+                            sqlWhere += @" WHERE nombre LIKE '%' + @parametro + '%'
                                ";
                             break;
                         case "cuit":

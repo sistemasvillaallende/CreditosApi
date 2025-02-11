@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace CreditosApi.Entities
 {
+    
     public class CM_Conceptos_credito_materiales : DALBase
     {
         public int cod_concepto { get; set; }

@@ -11,6 +11,7 @@ namespace CreditosApi.Entities
     public class CM_Credito_materiales : DALBase
     {
         public int id_credito_materiales { get; set; }
+        public string nombre { get; set; }  
         public int legajo { get; set; }
         public string domicilio { get; set; }
         public DateTime? fecha_alta { get; set; }
@@ -41,6 +42,7 @@ namespace CreditosApi.Entities
             legajo = 0;
             domicilio = string.Empty;
             fecha_alta = DateTime.Now;
+            nombre = string.Empty;
             baja = false;
             fecha_baja = null;
             cuit_solicitante = string.Empty;
@@ -91,7 +93,7 @@ namespace CreditosApi.Entities
                 int manzana = dr.GetOrdinal("manzana");
                 int parcela = dr.GetOrdinal("parcela");
                 int p_h = dr.GetOrdinal("p_h");
-
+                int nomnre = dr.GetString("")
 
                 while (dr.Read())
                 {

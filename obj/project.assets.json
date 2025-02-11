@@ -3263,7 +3263,6 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302\\RuntimeIdentifierGraph.json"
       }
     }
-<<<<<<< HEAD
   },
   "logs": [
     {
@@ -3277,7 +3276,4 @@
       ]
     }
   ]
-=======
-  }
->>>>>>> main
 }

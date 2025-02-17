@@ -295,7 +295,7 @@ namespace CreditosApi.Entities
                     cmd.Parameters.AddWithValue("@manzana", obj.manzana);
                     cmd.Parameters.AddWithValue("@parcela", obj.parcela);
                     cmd.Parameters.AddWithValue("@p_h", obj.p_h);
-                    cmd.Parameters.AddWithValue("@nombre", obj.nombre);
+                    //cmd.Parameters.AddWithValue("@nombre", obj.nombre);
 
                     cmd.Connection.Open();
                     return Convert.ToInt32(cmd.ExecuteScalar());

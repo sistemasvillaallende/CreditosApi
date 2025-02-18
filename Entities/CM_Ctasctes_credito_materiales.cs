@@ -397,11 +397,7 @@ namespace CreditosApi.Entities
             }
         }
 
-        // public static int ObtenerUltimoNroTransaccion(SqlConnection con, SqlTransaction trx)
-        // {
-        //     SqlCommand cmd = new SqlCommand("SELECT ISNULL(MAX(NRO_TRANSACCION), 0) FROM CM_CTASCTES_CREDITO_MATERIALES ", con, trx);
-        //     return (int)cmd.ExecuteScalar();
-        // }
+
 
         public static int ObtenerUltimoNroTransaccion(SqlConnection con, SqlTransaction trx)
         {
@@ -465,7 +461,38 @@ namespace CreditosApi.Entities
             }
         }
 
+        public static List<CM_Ctasctes_credito_materiales> GetListCtaCteById(int id_credito_materiales)
+        {
+            try
+            {
+                List<CM_Ctasctes_credito_materiales> lst = new List<CM_Ctasctes_credito_materiales>();
 
+                string SQL = "SELECT * FROM Cm_ctasctes_credito_materiales WHERE id_credito_materiales = @id_credito_materiales";
+
+                using (SqlConnection con = GetConnection())
+                {
+                    con.Open();
+
+                    using (SqlCommand cmd = con.CreateCommand())
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = SQL;
+                        cmd.Parameters.AddWithValue("@id_credito_materiales", id_credito_materiales);
+
+                        using (SqlDataReader dr = cmd.ExecuteReader())
+                        {
+                            lst = mapeo(dr);
+                        }
+                    }
+                }
+
+                return lst;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al obtener los registros de Cm_ctasctes_credito_materiales", ex);
+            }
+        }
 
         public static void DeleteExcedente(int id_credito_materiales, int cantCuotasPermitidas, SqlConnection con, SqlTransaction trx)
         {
@@ -514,7 +541,7 @@ namespace CreditosApi.Entities
             int anio = int.Parse(ultimoPeriodoActual.Split('/')[0]);
             int mes = int.Parse(ultimoPeriodoActual.Split('/')[1]);
 
-            for (int i = 1; i < cantCuotasPermitidas ; i++)
+            for (int i = 1; i < cantCuotasPermitidas; i++)
             {
                 mes++;
                 if (mes > 12)

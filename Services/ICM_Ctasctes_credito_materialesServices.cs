@@ -11,7 +11,6 @@ namespace CreditosApi.Services
         public void DeleteDeudaCtaCte(int tipo_transaccion, int nro_transaccion, Auditoria obj);
         public List<LstDeudaCredito> getListDeudaCredito(int id_credito_materiales);
         public List<LstDeudaCredito> GetListTodasDeudas(int id_credito_materiales);
-
-
+        public List<CM_Ctasctes_credito_materiales> GetListCtaCteById(int id_credito_materiales);
     }
 }

@@ -152,8 +152,7 @@ namespace CreditosApi.Entities
             }
         }
 
-        public static CM_Credito_materiales getByPk(
-        int id_credito_materiales, int legajo)
+        public static CM_Credito_materiales getByPk(int id_credito_materiales, int legajo)
         {
             try
             {

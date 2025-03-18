@@ -88,8 +88,8 @@ namespace CreditosApi.Services
                             objCM.presupuesto_uva = CalculoPresupuestoUVA(objCM.presupuesto);
                             objCM.valor_cuota_uva = ValorCuotaUVA(objCM.presupuesto_uva, objCM.cant_cuotas);
 
-                            int idGenerado = Entities.CM_Credito_materiales.Insert(objCM, con, trx);
-                            InsertDeudasPorCuotas(objCM, idGenerado, con, trx);
+                            int idCredito = Entities.CM_Credito_materiales.Insert(objCM, con, trx);
+                            InsertDeudasPorCuotas(objCM, idCredito, con, trx);
                             AuditoriaD.InsertAuditoria(obj.auditoria, con, trx);
                             trx.Commit();
                         }
@@ -258,28 +258,32 @@ namespace CreditosApi.Services
             }
         }
 
-        public void InsertDeudasPorCuotas(CM_Credito_materiales obj, int idGenerado, SqlConnection con, SqlTransaction trx)
+        //nro_transaccion = GetNroTransaccion(4, con, trx);
+        //UpdateNroTransaccion(4, (nro_transaccion + lst.Count), con, trx);
+
+        public void InsertDeudasPorCuotas(CM_Credito_materiales obj, int idCredito, SqlConnection con, SqlTransaction trx)
         {
             int cantCuotas = obj.cant_cuotas;
             Decimal presupuesto = obj.presupuesto;
-
             Decimal MontoXCuota = Math.Ceiling(presupuesto / cantCuotas); // Ceiling y floor
-
+            int aux_nrotransaccion = CM_Ctasctes_credito_materiales.ObtenerUltimoNroTransaccion(con, trx);
+            //
             for (int i = 0; i < cantCuotas; i++)
             {
+                aux_nrotransaccion += 1;
                 CM_Ctasctes_credito_materiales ctacte = new CM_Ctasctes_credito_materiales();
                 ctacte.tipo_transaccion = 1;
                 ctacte.fecha_trasaccion = DateTime.Now;
-                ctacte.id_credito_materiales = idGenerado;
-                ctacte.periodo = GeneradorPeriodo.GeneradorPeriodoXCuota(i);
+                ctacte.id_credito_materiales = idCredito;
+                //ctacte.periodo = GeneradorPeriodo.GeneradorPeriodoXCuota(i);
+                ctacte.periodo = GeneradorPeriodo.GeneradorCuotaxCantidad(i, cantCuotas);
                 ctacte.monto_original = MontoXCuota; // aca en UVA con el primer valor del UVA
                 ctacte.debe = MontoXCuota; /// Y Este ya en pesos ?
                 ctacte.categoria_deuda = 1; // Por ahora lo hardcodeo, despeus lo mando por params
                 ctacte.vencimiento = DateTime.Now.AddMonths(i + 1);
-
-                int ultimoRegistro = CM_Ctasctes_credito_materiales.ObtenerUltimoNroTransaccion(con, trx);
-                CM_Ctasctes_credito_materiales.Insert(ctacte, con, trx, ultimoRegistro + 1);
-
+                //
+                //int ultimoRegistro = CM_Ctasctes_credito_materiales.ObtenerUltimoNroTransaccion(con, trx);
+                CM_Ctasctes_credito_materiales.Insert(ctacte, con, trx, aux_nrotransaccion);
             }
         }
 

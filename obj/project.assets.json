@@ -3607,23 +3607,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\mandres\\.nuget\\packages\\": {},
+    "C:\\Users\\allco\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Dev\\NET2022\\CreditosApi\\CreditosApi.csproj",
+      "projectUniqueName": "C:\\DEV\\Muni\\CreditosApi\\CreditosApi.csproj",
       "projectName": "CreditosApi",
-      "projectPath": "D:\\Dev\\NET2022\\CreditosApi\\CreditosApi.csproj",
-      "packagesPath": "C:\\Users\\mandres\\.nuget\\packages\\",
-      "outputPath": "D:\\Dev\\NET2022\\CreditosApi\\obj\\",
+      "projectPath": "C:\\DEV\\Muni\\CreditosApi\\CreditosApi.csproj",
+      "packagesPath": "C:\\Users\\allco\\.nuget\\packages\\",
+      "outputPath": "C:\\DEV\\Muni\\CreditosApi\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\mandres\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\allco\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -3648,9 +3648,9 @@
       "restoreAuditProperties": {
         "enableAudit": "true",
         "auditLevel": "low",
-        "auditMode": "all"
+        "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.100"
+      "SdkAnalysisLevel": "9.0.200"
     },
     "frameworks": {
       "net6.0": {
@@ -3712,30 +3712,8 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201\\RuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1904",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "El paquete \"System.Drawing.Common\" 4.7.0 tiene una vulnerabilidad de gravedad crítica conocida, https://github.com/advisories/GHSA-rxg9-xrhp-64gj",
-      "libraryId": "System.Drawing.Common",
-      "targetGraphs": [
-        "net6.0"
-      ]
-    },
-    {
-      "code": "NU1902",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "El paquete \"System.Security.Cryptography.Xml\" 4.7.0 tiene una vulnerabilidad de gravedad moderada conocida, https://github.com/advisories/GHSA-vh55-786g-wjwj",
-      "libraryId": "System.Security.Cryptography.Xml",
-      "targetGraphs": [
-        "net6.0"
-      ]
-    }
-  ]
+  }
 }

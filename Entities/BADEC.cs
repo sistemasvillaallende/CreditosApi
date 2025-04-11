@@ -21,7 +21,7 @@ namespace CreditosApi.Entities
         public int cod_calle { get; set; }
         public int nro_dom { get; set; }
         public int cod_barrio { get; set; }
-        public int cod_postal { get; set; }
+        public string cod_postal { get; set; }
         public string localidad { get; set; }
         public string provincia { get; set; }
         public string pais { get; set; }
@@ -60,7 +60,7 @@ namespace CreditosApi.Entities
             cod_calle = 0;
             nro_dom = 0;
             cod_barrio = 0;
-            cod_postal = 0;
+            cod_postal = string.Empty;
             localidad = string.Empty;
             provincia = string.Empty;
             pais = string.Empty;
@@ -118,24 +118,41 @@ namespace CreditosApi.Entities
             BADEC obj;
             if (dr.HasRows)
             {
+                int nro_bad = dr.GetOrdinal("nro_bad");
+                int nombre = dr.GetOrdinal("nombre");
+                int cod_calle = dr.GetOrdinal("cod_calle");
+                int nombre_calle = dr.GetOrdinal("nombre_calle");
+                int cod_barrio = dr.GetOrdinal("cod_barrio");
+                int nombre_barrio = dr.GetOrdinal("nombre_barrio");
+                int nro_dom = dr.GetOrdinal("nro_dom");
+                int piso_dpto = dr.GetOrdinal("piso_dpto");
+                int localidad = dr.GetOrdinal("localidad");
+                int provincia = dr.GetOrdinal("provincia");
+                int cuit = dr.GetOrdinal("cuit");
+                int cod_postal = dr.GetOrdinal("cod_postal");
+                int e_mail = dr.GetOrdinal("e_mail");
+                int celular = dr.GetOrdinal("celular");
+                int sexo = dr.GetOrdinal("sexo");
+
+
                 while (dr.Read())
                 {
                     obj = new BADEC();
-                    if (!dr.IsDBNull(0)) { obj.nro_bad = dr.GetInt32(0); }
-                    if (!dr.IsDBNull(1)) { obj.nombre = dr.GetString(1); }
-                    if (!dr.IsDBNull(2)) { obj.cod_calle = dr.GetInt32(2); }
-                    if (!dr.IsDBNull(3)) { obj.nombre_calle = dr.GetString(3); }
-                    if (!dr.IsDBNull(4)) { obj.cod_barrio = dr.GetInt32(4); }
-                    if (!dr.IsDBNull(5)) { obj.nombre_barrio = dr.GetString(5); }
-                    if (!dr.IsDBNull(6)) { obj.nro_dom = dr.GetInt32(6); }
-                    if (!dr.IsDBNull(7)) { obj.piso_dpto = dr.GetString(7); }
-                    if (!dr.IsDBNull(8)) { obj.localidad = dr.GetString(8); }
-                    if (!dr.IsDBNull(9)) { obj.provincia = dr.GetString(9); }
-                    if (!dr.IsDBNull(10)) { obj.cod_postal = dr.GetInt32(10); }
-                    if (!dr.IsDBNull(11)) { obj.cuit = dr.GetString(11); }
-                    if (!dr.IsDBNull(12)) { obj.e_mail = dr.GetString(12); }
-                    if (!dr.IsDBNull(13)) { obj.celular = dr.GetString(13); }
-                    if (!dr.IsDBNull(14)) { obj.sexo = dr.GetString(14); }
+                    if (!dr.IsDBNull(0)) { obj.nro_bad = dr.GetInt32(nro_bad); }
+                    if (!dr.IsDBNull(1)) { obj.nombre = dr.GetString(nombre); }
+                    if (!dr.IsDBNull(2)) { obj.cod_calle = dr.GetInt32(cod_calle); }
+                    if (!dr.IsDBNull(3)) { obj.nombre_calle = dr.GetString(nombre_calle); }
+                    if (!dr.IsDBNull(4)) { obj.cod_barrio = dr.GetInt32(cod_barrio); }
+                    if (!dr.IsDBNull(5)) { obj.nombre_barrio = dr.GetString(nombre_barrio); }
+                    if (!dr.IsDBNull(6)) { obj.nro_dom = dr.GetInt32(nro_dom); }
+                    if (!dr.IsDBNull(7)) { obj.piso_dpto = dr.GetString(piso_dpto); }
+                    if (!dr.IsDBNull(8)) { obj.localidad = dr.GetString(localidad); }
+                    if (!dr.IsDBNull(9)) { obj.provincia = dr.GetString(provincia); }
+                    if (!dr.IsDBNull(10)) { obj.cod_postal = dr.GetString(cod_postal); }
+                    if (!dr.IsDBNull(11)) { obj.cuit = dr.GetString(cuit); }
+                    if (!dr.IsDBNull(12)) { obj.e_mail = dr.GetString(e_mail); }
+                    if (!dr.IsDBNull(13)) { obj.celular = dr.GetString(celular); }
+                    if (!dr.IsDBNull(14)) { obj.sexo = dr.GetString(sexo); }
                     lst.Add(obj);
                 }
             }
@@ -162,7 +179,7 @@ namespace CreditosApi.Entities
                     if (!dr.IsDBNull(8)) { obj.cod_calle = dr.GetInt32(8); }
                     if (!dr.IsDBNull(9)) { obj.nro_dom = dr.GetInt32(9); }
                     if (!dr.IsDBNull(10)) { obj.cod_barrio = dr.GetInt32(10); }
-                    if (!dr.IsDBNull(11)) { obj.cod_postal = dr.GetInt32(11); }
+                    if (!dr.IsDBNull(11)) { obj.cod_postal = dr.GetString(11); }
                     if (!dr.IsDBNull(12)) { obj.localidad = dr.GetString(12); }
                     if (!dr.IsDBNull(13)) { obj.provincia = dr.GetString(13); }
                     if (!dr.IsDBNull(14)) { obj.pais = dr.GetString(14); }
@@ -280,16 +297,24 @@ namespace CreditosApi.Entities
         {
             try
             {
-                string sql = @"SELECT TOP 100
-                        NRO_BAD, NOMBRE, COD_CALLE, NOMBRE_CALLE,
-                        COD_BARRIO, NOMBRE_BARRIO, NRO_DOM,
-                        PISO_DPTO = ISNULL(PISO_DPTO, ''),
-                        Localidad, PROVINCIA, COD_POSTAl = ISNULL(COD_POSTAl, 0),
-                        CUIT = ISNULL(CUIT, ''),
-                        E_MAIL = ISNULL(E_MAIL, ''),                        
-                        celular,
-                        sexo
-                        FROM BADEC  
+                string sql =
+                    @"SELECT TOP 100
+                        0 AS NRO_BAD,
+	                        APELLIDO + ', ' + NOMBRE AS NOMBRE, 
+	                        0 AS COD_CALLE, 
+	                        DIRECCION AS NOMBRE_CALLE,
+	                        0 AS COD_BARRIO, 
+	                        '' AS NOMBRE_BARRIO, 
+	                        0 AS NRO_DOM,
+	                        '' AS PISO_DPTO,
+	                        Localidad, 
+	                        DESC_PROVINCIA AS PROVINCIA, 
+	                        COD_POSTAl,
+	                        CUIT,
+	                        MAIL AS E_MAIL,                        
+	                        CONVERT(VARCHAR, CEL_COD_AREA) + ' - ' + CONVERT(VARCHAR, CEL_NUMERO) AS celular,
+	                        sexo
+                        FROM VECINO_DIGITAL  
                         WHERE CUIT LIKE @cuit";
                 List<BADEC> lst = new List<BADEC>();
                 using (SqlConnection con = GetConnection())

@@ -1,5 +1,6 @@
 using System.Data.SqlClient;
 using System.Data;
+using Org.BouncyCastle.Asn1.X509;
 
 namespace CreditosApi.Entities
 {
@@ -63,7 +64,9 @@ namespace CreditosApi.Entities
                             AND C.tipo_transaccion = 1
                             AND C.nro_plan IS NULL
                             AND C.nro_procuracion IS NULL
-                            AND C.id_credito_materiales = @id_credito_materiales";
+                            AND C.id_credito_materiales = @id_credito_materiales
+                        ORDER BY C.periodo";
+                        
             // AND vencimiento <= GETDATE() ORDER BY C.periodo ASC";
 
 
@@ -151,10 +154,11 @@ namespace CreditosApi.Entities
                         FROM CM_CTASCTES_CREDITO_MATERIALES C
                         INNER JOIN CM_CATE_DEUDA_CREDITO_MATERIALES b on C.categoria_deuda = b.cod_categoria
                         WHERE
-                            C.tipo_transaccion = 1
-                            AND C.nro_plan IS NULL
+                            --C.tipo_transaccion = 1
+                            C.nro_plan IS NULL
                             AND C.nro_procuracion IS NULL
-                            AND C.id_credito_materiales = @id_credito_materiales";
+                            AND C.id_credito_materiales = @id_credito_materiales
+                        ORDER BY C.periodo";
             // AND vencimiento <= GETDATE() ORDER BY C.periodo ASC";
 
 

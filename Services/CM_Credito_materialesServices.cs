@@ -1,4 +1,5 @@
 using System.Data.SqlClient;
+using System.Globalization;
 using CreditosApi.Entities;
 using CreditosApi.Entities.AUDITORIA;
 using CreditosApi.Entities.HELPERS;
@@ -25,16 +26,77 @@ namespace CreditosApi.Services
             }
         }
 
+        // public List<CM_Credito_materiales> GetAllCreditos()
+        // {
+        //     try
+        //     {
+        //         List<CM_Credito_materiales> allCreditos = CM_Credito_materiales.read();
+
+
+        //         foreach (var cred in allCreditos)
+        //         {
+        //             List<LstDeudaCredito> allDeudas = LstDeudaCredito.getListDeudaCredito(cred.id_credito_materiales);
+
+        //             foreach (var deuda in allDeudas)
+        //             {
+        //                 decimal totalVencido = 0;
+
+        //                 if (DateTime.TryParseExact(deuda.fecha_vencimiento, "d/M/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime fechaVenc))
+        //                 {
+        //                     if (fechaVenc < DateTime.Today)
+        //                     {
+        //                         // cred.con_deuda = 1;
+        //                         // cred.saldo_adeudado = deuda.importe;
+        //                         // break;
+        //                         totalVencido += deuda.importe;
+        //                     }
+        //                 }
+        //             }
+
+        //         }
+
+        //         return allCreditos;
+        //     }
+        //     catch (System.Exception)
+        //     {
+
+        //         throw;
+        //     }
+        // }
         public List<CM_Credito_materiales> GetAllCreditos()
         {
             try
             {
                 List<CM_Credito_materiales> allCreditos = CM_Credito_materiales.read();
+
+                foreach (var cred in allCreditos)
+                {
+                    List<LstDeudaCredito> allDeudas = LstDeudaCredito.getListDeudaCredito(cred.id_credito_materiales);
+
+                    decimal totalVencido = 0;
+
+                    foreach (var deuda in allDeudas)
+                    {
+                        if (DateTime.TryParseExact(deuda.fecha_vencimiento, "d/M/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime fechaVenc))
+                        {
+                            if (fechaVenc < DateTime.Today)
+                            {
+                                totalVencido += deuda.importe;
+                            }
+                        }
+                    }
+
+                    if (totalVencido > 0)
+                    {
+                        cred.con_deuda = 1;
+                        cred.saldo_adeudado = totalVencido;
+                    }
+                }
+
                 return allCreditos;
             }
             catch (System.Exception)
             {
-
                 throw;
             }
         }

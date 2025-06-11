@@ -3,6 +3,7 @@ using CreditosApi.Entities;
 using CreditosApi.Entities.AUDITORIA;
 using CreditosApi.Entities.HELPERS;
 using CreditosApi.Helpers;
+using CreditosApi.Model;
 using Newtonsoft.Json;
 
 namespace CreditosApi.Services
@@ -177,7 +178,8 @@ namespace CreditosApi.Services
         }
 
 
-        public List<LstDeudaCredito> GetListTodasDeudas(int id_credito_materiales){
+        public List<LstDeudaCredito> GetListTodasDeudas(int id_credito_materiales)
+        {
             try
             {
                 var lst = LstDeudaCredito.GetListTodasDeudas(id_credito_materiales);
@@ -189,20 +191,34 @@ namespace CreditosApi.Services
             }
         }
 
-     public List<CM_Ctasctes_credito_materiales> GetListCtaCteById(int id_credito_materiales){
-        try
+        public List<CM_Ctasctes_credito_materiales> GetListCtaCteById(int id_credito_materiales)
         {
+            try
+            {
                 var lst = CM_Ctasctes_credito_materiales.GetListCtaCteById(id_credito_materiales);
                 return lst;
-            
-        }
-        catch (System.Exception)
-        {
-            
-            throw;
-        }
-     }
 
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+        public List<ResumenImporteDTO> ResumenImporte()
+        {         
+            try
+            {
+                return CM_Ctasctes_credito_materiales.ResumenImporte();
+            }
+            catch (System.Exception)
+            {
+                
+                throw;
+            }
+        }
 
 
     }

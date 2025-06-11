@@ -1,6 +1,7 @@
 using CreditosApi.Entities;
 using CreditosApi.Entities.AUDITORIA;
 using CreditosApi.Entities.HELPERS;
+using CreditosApi.Model;
 
 namespace CreditosApi.Services
 {
@@ -12,5 +13,6 @@ namespace CreditosApi.Services
         public List<LstDeudaCredito> getListDeudaCredito(int id_credito_materiales);
         public List<LstDeudaCredito> GetListTodasDeudas(int id_credito_materiales);
         public List<CM_Ctasctes_credito_materiales> GetListCtaCteById(int id_credito_materiales);
+        public  List<ResumenImporteDTO> ResumenImporte();
     }
 }

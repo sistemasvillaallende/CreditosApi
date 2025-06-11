@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CreditosApi.Model;
 
 namespace CreditosApi.Entities
 {
@@ -555,7 +556,94 @@ namespace CreditosApi.Entities
 
 
 
+        public static List<ResumenImporteDTO> ResumenImporte()
+        {
+            try
+            {
+                List<ResumenImporteDTO> lst = new List<ResumenImporteDTO>();
+                ResumenImporteDTO obj;
+                string SQL = @" SELECT a.legajo, a.fecha_alta, a.cuit_solicitante,
+                                    a.Nombre, 
+                                    a.domicilio,
+                                    a.presupuesto,
+                                    a.cant_cuotas,
+                                    (SELECT isnull((CONVERT(DEC(16,2),SUM(haber))),0) 
+                                    FROM CM_CTASCTES_CREDITO_MATERIALES b
+                                    WHERE 
+                                    a.id_credito_materiales=b.id_credito_materiales AND
+                                        b.tipo_transaccion=2) as imp_pagado,
+                                    (SELECT isnull((CONVERT(DEC(16,2),SUM(debe))),0) 
+                                    FROM CM_CTASCTES_CREDITO_MATERIALES b
+                                    WHERE 
+                                    a.id_credito_materiales=b.id_credito_materiales AND
+                                        b.tipo_transaccion=1 and b.pagado=0) as imp_adeudado,
+                                    (SELECT isnull((CONVERT(DEC(16,2),SUM(debe))),0) 
+                                    FROM CM_CTASCTES_CREDITO_MATERIALES b
+                                    WHERE 
+                                    a.id_credito_materiales=b.id_credito_materiales AND
+                                        b.tipo_transaccion=1 and b.pagado=0 AND
+                                        b.vencimiento < GETDATE()) as imp_vencido,
+                                    (SELECT COUNT(*)
+                                    FROM CM_CTASCTES_CREDITO_MATERIALES b
+                                    WHERE 
+                                    a.id_credito_materiales=b.id_credito_materiales AND
+                                        b.tipo_transaccion=1 and b.pagado=0 AND
+                                        b.vencimiento < GETDATE()) as cuotas_vencidas,
+                                    (SELECT COUNT(*)
+                                    FROM CM_CTASCTES_CREDITO_MATERIALES b
+                                    WHERE 
+                                    a.id_credito_materiales=b.id_credito_materiales AND
+                                        b.tipo_transaccion=2) as cuotas_pagadas,
+                                    (SELECT convert(varchar(10),max(b.fecha_trasaccion),103)
+                                    FROM CM_CTASCTES_CREDITO_MATERIALES b
+                                    WHERE 
+                                    a.id_credito_materiales=b.id_credito_materiales AND
+                                        b.tipo_transaccion=2) as fecha_ultimo_pago
+                                    FROM CM_CREDITO_MATERIALES a
+                                    WHERE a.fecha_baja is null
+                                    ORDER BY a.legajo";
 
+                using (SqlConnection con = GetConnection())
+                {
+                    con.Open();
+
+                    using (SqlCommand cmd = con.CreateCommand())
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = SQL;
+
+                        using (SqlDataReader dr = cmd.ExecuteReader())
+                        {
+                            while (dr.Read())
+                            {
+                                obj = new ResumenImporteDTO();
+
+                                if (!dr.IsDBNull(dr.GetOrdinal("legajo"))) { obj.legajo = dr.GetInt32(dr.GetOrdinal("legajo")); }
+                                if (!dr.IsDBNull(dr.GetOrdinal("fecha_alta"))) { obj.fecha_alta = dr.GetDateTime(dr.GetOrdinal("fecha_alta")); }
+                                if (!dr.IsDBNull(dr.GetOrdinal("cuit_solicitante"))) { obj.cuit_solicitante = dr.GetString(dr.GetOrdinal("cuit_solicitante")); }
+                                if (!dr.IsDBNull(dr.GetOrdinal("domicilio"))) { obj.domicilio = dr.GetString(dr.GetOrdinal("domicilio")); }
+                                if (!dr.IsDBNull(dr.GetOrdinal("nombre"))) { obj.nombre = dr.GetString(dr.GetOrdinal("nombre")); }
+                                if (!dr.IsDBNull(dr.GetOrdinal("presupuesto"))) { obj.presupuesto = dr.GetDecimal(dr.GetOrdinal("presupuesto")); }
+                                if (!dr.IsDBNull(dr.GetOrdinal("imp_pagado"))) { obj.imp_pagado = dr.GetDecimal(dr.GetOrdinal("imp_pagado")); }
+                                if (!dr.IsDBNull(dr.GetOrdinal("imp_adeudado"))) { obj.imp_adeudado = dr.GetDecimal(dr.GetOrdinal("imp_adeudado")); }
+                                if (!dr.IsDBNull(dr.GetOrdinal("imp_vencido"))) { obj.imp_vencido = dr.GetDecimal(dr.GetOrdinal("imp_vencido")); }
+                                if (!dr.IsDBNull(dr.GetOrdinal("cuotas_vencidas"))) { obj.cuotas_vencidas = dr.GetInt32(dr.GetOrdinal("cuotas_vencidas")); }
+                                if (!dr.IsDBNull(dr.GetOrdinal("cuotas_pagadas"))) { obj.cuotas_pagadas = dr.GetInt32(dr.GetOrdinal("cuotas_pagadas")); }
+                                if (!dr.IsDBNull(dr.GetOrdinal("fecha_ultimo_pago"))) { obj.fecha_ultimo_pago = dr.GetString(dr.GetOrdinal("fecha_ultimo_pago")); }
+
+                                lst.Add(obj);
+                            }
+                        }
+                    }
+                }
+
+                return lst;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al obtener los registros para importes ", ex);
+            }
+        }
 
     }
 }

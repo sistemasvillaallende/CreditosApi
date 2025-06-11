@@ -86,5 +86,19 @@ namespace CreditosApi.Controllers
             }
         }
 
+        [HttpGet]
+        public ActionResult resumenImportes()
+        {
+            try
+            {
+                var lst = _CM_CtasctesService.ResumenImporte();
+                return Ok(lst);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Ocurrió un error al obtener lista de importes: " + ex.Message);
+            }
+        }
+
     }
 }

@@ -152,6 +152,30 @@ namespace CreditosApi.Entities
             }
         }
 
+        public static List<CM_Credito_materiales> read(SqlConnection con, SqlTransaction trx)
+        {
+            try
+            {
+                string sql = "SELECT * FROM CM_CREDITO_MATERIALES";
+
+                using (SqlCommand cmd = new SqlCommand(sql, con, trx))
+                {
+                    cmd.CommandType = CommandType.Text;
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        List<CM_Credito_materiales> lst = mapeo(dr);
+                        return lst;
+                    }
+                }
+            }
+            catch
+            {
+                throw; // mantiene el stack trace original
+            }
+        }
+
+
         public static CM_Credito_materiales getByPk(int id_credito_materiales, int legajo)
         {
             try
@@ -207,6 +231,31 @@ namespace CreditosApi.Entities
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        public static List<CM_Credito_materiales> GetById(int id_credito_materiales, SqlConnection con, SqlTransaction trx)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.AppendLine("SELECT * FROM Cm_credito_materiales WHERE id_credito_materiales = @id_credito_materiales");
+
+                using (SqlCommand cmd = new SqlCommand(sql.ToString(), con, trx))
+                {
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.AddWithValue("@id_credito_materiales", id_credito_materiales);
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        List<CM_Credito_materiales> lst = mapeo(dr);
+                        return lst;
+                    }
+                }
+            }
+            catch
+            {
+                throw; 
             }
         }
 

@@ -4,6 +4,8 @@ namespace CreditosApi.Entities.HELPERS
     {
 
         public CM_Credito_materiales creditoMateriales { get; set; }
+
+        public int? categoria_deuda  { get; set; }
         public AUDITORIA.Auditoria auditoria { get; set; }
         public Credito_materialesAuditoria()
         {

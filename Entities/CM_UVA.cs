@@ -79,7 +79,7 @@ namespace CreditosApi.Entities
 
                     SqlDataReader dr = cmd.ExecuteReader();
                     List<CM_UVA> lst = mapeo(dr);
-                    return lst.FirstOrDefault(); 
+                    return lst.FirstOrDefault();
                 }
             }
             catch (Exception ex)
@@ -87,6 +87,53 @@ namespace CreditosApi.Entities
                 throw ex;
             }
         }
+
+        public static int ObtenerUltimoIdUVA(SqlConnection con, SqlTransaction trx)
+        {
+            SqlCommand cmd = new SqlCommand("SELECT ISNULL(MAX(id_uva), 0) FROM CM_UVAS ", con, trx);
+            return (int)cmd.ExecuteScalar();
+        }
+
+
+
+        public static void insertValorUVA(int id_uva, DateTime fecha_uva, int valor_uva,string usuario, SqlConnection con, SqlTransaction trx)
+        {
+            try
+            {
+                string strSQL = @"
+           INSERT INTO CM_UVAS (
+               id_uva,
+               fecha_uva,
+               valor_uva,
+               usuario
+           ) VALUES (
+               @id_uva,
+               @fecha_uva,
+               @valor_uva,
+               @usuario
+           )";
+
+                SqlCommand cmd = con.CreateCommand();
+                cmd.Transaction = trx;
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = strSQL;
+
+                cmd.Parameters.AddWithValue("@id_uva", id_uva);
+                cmd.Parameters.AddWithValue("@fecha_uva", fecha_uva );
+                cmd.Parameters.AddWithValue("@valor_uva", valor_uva);
+                cmd.Parameters.AddWithValue("@usuario", usuario);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
+
+
 
     }
 }

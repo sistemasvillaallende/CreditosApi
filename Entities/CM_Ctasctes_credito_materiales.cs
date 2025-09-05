@@ -189,6 +189,31 @@ namespace CreditosApi.Entities
             }
         }
 
+        public static List<CM_Ctasctes_credito_materiales> GetCuotasByCredito(int id_credito_materiales, SqlConnection con, SqlTransaction trx)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.AppendLine("SELECT * FROM Cm_ctasctes_credito_materiales WHERE id_credito_materiales = @id_credito_materiales");
+
+                using (SqlCommand cmd = new SqlCommand(sql.ToString(), con, trx))
+                {
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.AddWithValue("@id_credito_materiales", id_credito_materiales);
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        List<CM_Ctasctes_credito_materiales> lst = mapeo(dr);
+                        return lst;
+                    }
+                }
+            }
+            catch
+            {
+                throw; 
+            }
+        }
+
 
         public static int Insert(CM_Ctasctes_credito_materiales obj, SqlConnection con, SqlTransaction trx, int ultimoRegistro)
         {
@@ -316,6 +341,42 @@ namespace CreditosApi.Entities
                 throw ex;
             }
         }
+
+        public static void UpdateCampoDebe(decimal campoDebe, int tipo_transaccion, int nro_transaccion, int id_credito_materiales, SqlConnection con, SqlTransaction trx)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.AppendLine("UPDATE Cm_ctasctes_credito_materiales SET");
+                sql.AppendLine("monto_original = @monto_original,");
+                sql.AppendLine("debe=@debe");
+                sql.AppendLine("WHERE tipo_transaccion=@tipo_transaccion");
+                sql.AppendLine("AND nro_transaccion=@nro_transaccion");
+
+                using (SqlCommand cmd = new SqlCommand(sql.ToString(), con, trx))
+
+                {
+                    cmd.CommandType = CommandType.Text;
+
+                    cmd.Parameters.AddWithValue("@tipo_transaccion", tipo_transaccion);
+                    cmd.Parameters.AddWithValue("@nro_transaccion", nro_transaccion);
+                    cmd.Parameters.AddWithValue("@id_credito_materiales", id_credito_materiales);
+                    cmd.Parameters.AddWithValue("@debe", campoDebe);
+                    cmd.Parameters.AddWithValue("@monto_original", campoDebe);
+
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
+
 
         public static void Delete(int tipo_transaccion, int nro_transaccion, SqlConnection con, SqlTransaction trx)
         {

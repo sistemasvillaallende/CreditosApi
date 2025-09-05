@@ -25,7 +25,6 @@ namespace CreditosApi.Model
             fecha_alta = DateTime.Now;
             cuit_solicitante = string.Empty;
             domicilio = string.Empty;
-            cuit_solicitante = string.Empty;
             nombre = string.Empty;
             presupuesto = 0;
             cant_cuotas = 0;

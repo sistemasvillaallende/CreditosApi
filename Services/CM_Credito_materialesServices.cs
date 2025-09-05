@@ -26,43 +26,19 @@ namespace CreditosApi.Services
             }
         }
 
-        // public List<CM_Credito_materiales> GetAllCreditos()
-        // {
-        //     try
-        //     {
-        //         List<CM_Credito_materiales> allCreditos = CM_Credito_materiales.read();
+        public List<CM_Credito_materiales> GetCreditoById(int id_credito_materiales,SqlConnection con, SqlTransaction trx)
+        {
+            try
+            {
+                return CM_Credito_materiales.GetById(id_credito_materiales,con,trx);
+            }
+            catch (System.Exception)
+            {
 
+                throw;
+            }
+        }
 
-        //         foreach (var cred in allCreditos)
-        //         {
-        //             List<LstDeudaCredito> allDeudas = LstDeudaCredito.getListDeudaCredito(cred.id_credito_materiales);
-
-        //             foreach (var deuda in allDeudas)
-        //             {
-        //                 decimal totalVencido = 0;
-
-        //                 if (DateTime.TryParseExact(deuda.fecha_vencimiento, "d/M/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime fechaVenc))
-        //                 {
-        //                     if (fechaVenc < DateTime.Today)
-        //                     {
-        //                         // cred.con_deuda = 1;
-        //                         // cred.saldo_adeudado = deuda.importe;
-        //                         // break;
-        //                         totalVencido += deuda.importe;
-        //                     }
-        //                 }
-        //             }
-
-        //         }
-
-        //         return allCreditos;
-        //     }
-        //     catch (System.Exception)
-        //     {
-
-        //         throw;
-        //     }
-        // }
         public List<CM_Credito_materiales> GetAllCreditos()
         {
             try
@@ -100,6 +76,24 @@ namespace CreditosApi.Services
                 throw;
             }
         }
+
+
+        public List<CM_Credito_materiales> GetAllCreditos(SqlConnection con, SqlTransaction trx)
+        {
+            try
+            {
+                List<CM_Credito_materiales> allCreditos = CM_Credito_materiales.read(con,trx);
+
+                return allCreditos;
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+        }
+
+
+
 
         public int Count()
         {
@@ -141,6 +135,7 @@ namespace CreditosApi.Services
                         try
                         {
                             var objCM = obj.creditoMateriales;
+                            int? categoriaDeuda = obj.categoria_deuda;
 
                             obj.auditoria.identificacion = objCM.legajo.ToString();
                             obj.auditoria.proceso = "NUEVO CREDITO MATERIALES";
@@ -151,7 +146,7 @@ namespace CreditosApi.Services
                             objCM.valor_cuota_uva = ValorCuotaUVA(objCM.presupuesto_uva, objCM.cant_cuotas);
 
                             int idCredito = Entities.CM_Credito_materiales.Insert(objCM, con, trx);
-                            InsertDeudasPorCuotas(objCM, idCredito, con, trx);
+                            InsertDeudasPorCuotas(objCM, idCredito, categoriaDeuda, con, trx);
                             AuditoriaD.InsertAuditoria(obj.auditoria, con, trx);
                             trx.Commit();
                         }
@@ -323,7 +318,7 @@ namespace CreditosApi.Services
         //nro_transaccion = GetNroTransaccion(4, con, trx);
         //UpdateNroTransaccion(4, (nro_transaccion + lst.Count), con, trx);
 
-        public void InsertDeudasPorCuotas(CM_Credito_materiales obj, int idCredito, SqlConnection con, SqlTransaction trx)
+        public void InsertDeudasPorCuotas(CM_Credito_materiales obj, int idCredito, int? categoriaDeuda, SqlConnection con, SqlTransaction trx)
         {
             int cantCuotas = obj.cant_cuotas;
             Decimal presupuesto = obj.presupuesto;
@@ -341,7 +336,7 @@ namespace CreditosApi.Services
                 ctacte.periodo = GeneradorPeriodo.GeneradorCuotaxCantidad(i, cantCuotas);
                 ctacte.monto_original = MontoXCuota; // aca en UVA con el primer valor del UVA
                 ctacte.debe = MontoXCuota; /// Y Este ya en pesos ?
-                ctacte.categoria_deuda = 1; // Por ahora lo hardcodeo, despeus lo mando por params
+                ctacte.categoria_deuda = categoriaDeuda ?? 1;
                 ctacte.vencimiento = DateTime.Now.AddMonths(i + 1);
                 //
                 //int ultimoRegistro = CM_Ctasctes_credito_materiales.ObtenerUltimoNroTransaccion(con, trx);

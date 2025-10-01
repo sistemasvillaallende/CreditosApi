@@ -48,15 +48,9 @@ namespace CreditosApi.Services
               int maxId = CM_UVA.ObtenerUltimoIdUVA(con, trx);
               DateTime fechaUVA = DateTime.Now;
               CM_UVA.insertValorUVA(maxId + 1, fechaUVA, valor_uva, auditoria.usuario, con, trx);
-              ActualizarMontosCtaCte(valor_uva,con,trx);
-              // La idea es que luego de que leugo de modificar el valor del UVA me modifique las cta ctes
-              // Las cta ctes estan en pesos , puedo modificarles el valor si PAGADO = FALSE 
-              // tengo que modificarles el debe a el valor de la cuota_uva x el valor del UVA
-              // En estas consideraciones el monto original supongo que lo dejo como esta
-              //seteo tambien el id_uva utilizado
+              //ActualizarMontosCtaCte(valor_uva,con,trx);
               AuditoriaD.InsertAuditoria(auditoria, con, trx);
               trx.Commit();
-
             }
             catch (Exception)
             {

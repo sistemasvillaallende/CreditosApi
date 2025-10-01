@@ -184,9 +184,10 @@ namespace CreditosApi.Services
 
                             CM_Credito_materiales creditoActual = CM_Credito_materiales.getByPk(id_credito_materiales, legajo); // Sacando legajo 
 
-                            // Actualiza los datos actuales del credito 
+                            // Actualiza los datos en la tabla general del credito en la tabla CM_CREDITO_MATERIALES
                             Entities.CM_Credito_materiales.Update(legajo, id_credito_materiales, obj.creditoMateriales, con, trx);
 
+                            // Actualiza los datos en la tabla de la cuenta corriente CM_CTASCTES_MATERIALES
                             UpdateCtaCtesXCredito(creditoActual, obj.creditoMateriales.cant_cuotas, obj.creditoMateriales.presupuesto, con, trx);
 
                             AuditoriaD.InsertAuditoria(obj.auditoria, con, trx);
@@ -332,7 +333,6 @@ namespace CreditosApi.Services
                 ctacte.tipo_transaccion = 1;
                 ctacte.fecha_trasaccion = DateTime.Now;
                 ctacte.id_credito_materiales = idCredito;
-                //ctacte.periodo = GeneradorPeriodo.GeneradorPeriodoXCuota(i);
                 ctacte.periodo = GeneradorPeriodo.GeneradorCuotaxCantidad(i, cantCuotas);
                 ctacte.monto_original = MontoXCuota; // aca en UVA con el primer valor del UVA
                 ctacte.debe = MontoXCuota; /// Y Este ya en pesos ?
@@ -366,7 +366,6 @@ namespace CreditosApi.Services
             List<CM_Ctasctes_credito_materiales> cuotasActuales = CM_Ctasctes_credito_materiales.GetListCtaCteById(creditoActual.id_credito_materiales, con, trx);
             decimal montoPorCuotaNuevo = Math.Ceiling(presupuestoNvo / cuotasNvas);
 
-
             if (cuotasNvas > cuotasActuales.Count())
             {
                 for (int i = cuotasActuales.Count(); i < cuotasNvas; i++)
@@ -376,7 +375,7 @@ namespace CreditosApi.Services
                         tipo_transaccion = 1,
                         fecha_trasaccion = DateTime.Now,
                         id_credito_materiales = creditoActual.id_credito_materiales,
-                        periodo = GeneradorPeriodo.GeneradorPeriodoXCuota(i),
+                        periodo = GeneradorPeriodo.GeneradorCuotaxCantidad(i, cuotasNvas),
                         monto_original = montoPorCuotaNuevo,
                         debe = montoPorCuotaNuevo,
                         categoria_deuda = 1,
@@ -394,13 +393,21 @@ namespace CreditosApi.Services
 
             }
 
-            foreach (var cuota in cuotasActuales)
+            // foreach (var cuota in cuotasActuales)
+            // {
+            //     cuota.monto_original = montoPorCuotaNuevo;
+            //     cuota.debe = montoPorCuotaNuevo;
+            //     cuota.periodo = GeneradorPeriodo.GeneradorCuotaxCantidad(i,cuotasNvas);
+            //     Entities.CM_Ctasctes_credito_materiales.Update(cuota, con, trx);
+            // }
+            for (int i = 0; i < cuotasActuales.Count; i++)
             {
+                var cuota = cuotasActuales[i];
                 cuota.monto_original = montoPorCuotaNuevo;
                 cuota.debe = montoPorCuotaNuevo;
+                cuota.periodo = GeneradorPeriodo.GeneradorCuotaxCantidad(i, cuotasNvas);
                 Entities.CM_Ctasctes_credito_materiales.Update(cuota, con, trx);
             }
-
 
         }
 

@@ -375,9 +375,6 @@ namespace CreditosApi.Entities
         }
 
 
-
-
-
         public static void Delete(int tipo_transaccion, int nro_transaccion, SqlConnection con, SqlTransaction trx)
         {
             try

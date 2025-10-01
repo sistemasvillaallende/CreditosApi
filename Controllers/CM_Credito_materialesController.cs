@@ -69,7 +69,6 @@ namespace CreditosApi.Controllers
 
                 if (lstCtactes.Any(cta => cta.pagado == 1))
                 {
-
                     return BadRequest(new { message = "No se puede modificar credito por presentar almenos una cuota pagada" });
                 }
 

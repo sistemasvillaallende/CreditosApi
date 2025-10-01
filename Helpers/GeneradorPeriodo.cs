@@ -14,7 +14,7 @@ namespace CreditosApi.Helpers
 
         public static string GeneradorCuotaxCantidad(int i, int totalCuotas)
         {
-            // Asegurar que ambas partes tengan 3 dígitos con ceros a la izquierda
+            // Asegurar que ambas partes tengan 3 digitos con ceros a la izquierda
             string nroCuota = (i + 1).ToString("D3");
             string total = totalCuotas.ToString("D3");
 

@@ -62,8 +62,6 @@ namespace CreditosApi.Controllers
             }
         }
 
-
-
         [HttpGet]
         public ActionResult getListDeudaCredito(int id_credito_materiales)
         {

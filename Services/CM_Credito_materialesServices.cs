@@ -26,11 +26,25 @@ namespace CreditosApi.Services
             }
         }
 
-        public List<CM_Credito_materiales> GetCreditoById(int id_credito_materiales,SqlConnection con, SqlTransaction trx)
+        public  CM_Credito_materiales GetByIdYLegajo(int id_credito_materiales, int legajo)
         {
             try
             {
-                return CM_Credito_materiales.GetById(id_credito_materiales,con,trx);
+                return CM_Credito_materiales.GetByIdYLegajo(id_credito_materiales,legajo);
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+        public List<CM_Credito_materiales> GetCreditoById(int id_credito_materiales, SqlConnection con, SqlTransaction trx)
+        {
+            try
+            {
+                return CM_Credito_materiales.GetById(id_credito_materiales, con, trx);
             }
             catch (System.Exception)
             {
@@ -82,7 +96,7 @@ namespace CreditosApi.Services
         {
             try
             {
-                List<CM_Credito_materiales> allCreditos = CM_Credito_materiales.read(con,trx);
+                List<CM_Credito_materiales> allCreditos = CM_Credito_materiales.read(con, trx);
 
                 return allCreditos;
             }
@@ -316,6 +330,11 @@ namespace CreditosApi.Services
             }
         }
 
+
+     
+
+
+
         //nro_transaccion = GetNroTransaccion(4, con, trx);
         //UpdateNroTransaccion(4, (nro_transaccion + lst.Count), con, trx);
 
@@ -326,6 +345,7 @@ namespace CreditosApi.Services
             Decimal MontoXCuota = Math.Ceiling(presupuesto / cantCuotas); // Ceiling y floor
             int aux_nrotransaccion = CM_Ctasctes_credito_materiales.ObtenerUltimoNroTransaccion(con, trx);
             //
+            Decimal montoAcumulado = 0;
             for (int i = 0; i < cantCuotas; i++)
             {
                 aux_nrotransaccion += 1;
@@ -334,11 +354,19 @@ namespace CreditosApi.Services
                 ctacte.fecha_trasaccion = DateTime.Now;
                 ctacte.id_credito_materiales = idCredito;
                 ctacte.periodo = GeneradorPeriodo.GeneradorCuotaxCantidad(i, cantCuotas);
-                ctacte.monto_original = MontoXCuota; // aca en UVA con el primer valor del UVA
-                ctacte.debe = MontoXCuota; /// Y Este ya en pesos ?
+                //ctacte.monto_original = MontoXCuota; // aca en UVA con el primer valor del UVA
+                //ctacte.debe = MontoXCuota; /// Y Este ya en pesos ?
                 ctacte.categoria_deuda = categoriaDeuda ?? 1;
                 ctacte.vencimiento = DateTime.Now.AddMonths(i + 1);
-                //
+                // Para la ultima cuota le sumo el excedente
+                if (i == cantCuotas - 1)
+                {
+                    MontoXCuota = presupuesto - montoAcumulado;
+                }
+                ctacte.monto_original = MontoXCuota;
+                ctacte.debe = MontoXCuota;
+
+                montoAcumulado += MontoXCuota;
                 //int ultimoRegistro = CM_Ctasctes_credito_materiales.ObtenerUltimoNroTransaccion(con, trx);
                 CM_Ctasctes_credito_materiales.Insert(ctacte, con, trx, aux_nrotransaccion);
             }
@@ -442,5 +470,152 @@ namespace CreditosApi.Services
 
         }
 
+
+        public void ActualizarCuotasUVATrimestral(SqlConnection con, SqlTransaction trx)
+        {
+            DateTime fechaActual = DateTime.Now;
+
+            // traer todas las cuotas no pagadas o aun no pagas
+            var cuotasNoPagadas = CM_Ctasctes_credito_materiales.ObtenerCuotasNoPagadas(con, trx);
+
+            // Agrupar por id_credito_materiales
+            var cuotasPorCredito = cuotasNoPagadas.GroupBy(c => c.id_credito_materiales);
+
+            foreach (var grupoCredito in cuotasPorCredito)
+            {
+                int idCredito = grupoCredito.Key;
+                //DateTime fechaAltaCredito = CM_Credito_materiales.GetFechaAlta(idCredito, con, trx);
+                var credito = CM_Credito_materiales.GetByIdCredito(idCredito, con, trx);  // Metraigo el credito
+                DateTime fechaAltaCredito = credito.fecha_alta ?? DateTime.MinValue;  // Saco la fecha de Alta del credito
+                int mesesDesdeAlta = CalcularMesesEntre(fechaAltaCredito, fechaActual); // Calculo la diferencia de meses entre el alta y la fcha actual
+
+                Decimal valorCuotaUVA = credito.valor_cuota_uva ?? 0;
+                // Ordenar cuotas por vencimiento
+                var cuotasOrdenadas = grupoCredito.OrderBy(c => c.vencimiento).ToList();
+
+                for (int i = 0; i < cuotasOrdenadas.Count; i++)
+                {
+                    var cuota = cuotasOrdenadas[i];
+
+                    // Calcular nro_cuota basado en la posición
+                    int nroCuota = i + 1;
+
+                    int trimestreCuota = (nroCuota - 1) / 3;
+                    int mesInicioTrimestreCuota = (trimestreCuota * 3) + 1;
+
+                    if (mesesDesdeAlta >= mesInicioTrimestreCuota)
+                    {
+                        DateTime fechaInicioTrimestre = fechaAltaCredito.AddMonths(mesInicioTrimestreCuota - 1);
+                        Decimal valor_uva = CM_UVA.GetUltimaFila().valor_uva; // Elige el ultimo valor del UVA subido en el sistema
+
+                        Decimal nuevoMontoPesos = valorCuotaUVA * valor_uva;
+                        Decimal montoPagado = cuota.monto_original - cuota.debe;
+
+                        cuota.debe = nuevoMontoPesos;
+
+                        CM_Ctasctes_credito_materiales.Update(cuota, con, trx);
+
+                    }
+                }
+            }
+        }
+
+        // MÉTODO AUXILIAR: Calcular meses entre dos fechas
+        private int CalcularMesesEntre(DateTime fechaInicio, DateTime fechaFin)
+        {
+            int meses = ((fechaFin.Year - fechaInicio.Year) * 12) + fechaFin.Month - fechaInicio.Month;
+
+            // Si el día actual es menor al día de inicio, restamos un mes
+            if (fechaFin.Day < fechaInicio.Day)
+            {
+                meses--;
+            }
+
+            return meses + 1; // +1 porque el primer mes cuenta como mes 1, no mes 0
+        }
+
+
+        // MÉTODO AUXILIAR: Obtener valor UVA por fecha específica
+        private Decimal ObtenerValorUVAPorFecha(DateTime fecha)
+        {
+            // Obtener el valor UVA más cercano a esa fecha
+            // Idealmente de una tabla histórica
+
+            // Ejemplo: consulta a tabla
+            // SELECT TOP 1 valor FROM UVA_Historico 
+            // WHERE fecha <= @fecha 
+            // ORDER BY fecha DESC
+
+            return 1000m; // Ejemplo
+        }
+
+
+        // public void ActualizarCuotasUVATrimestral2(SqlConnection con, SqlTransaction trx)
+        // {
+        //     DateTime fechaActual = DateTime.Now;
+
+        //     // Traer todas las cuotas no pagadas
+        //     var cuotasNoPagadas = CM_Ctasctes_credito_materiales.ObtenerCuotasNoPagadas(con, trx);
+
+        //     // Agrupar por id_credito_materiales
+        //     var cuotasPorCredito = cuotasNoPagadas.GroupBy(c => c.id_credito_materiales);
+
+        //     int cuotasActualizadas = 0;
+
+        //     foreach (var grupoCredito in cuotasPorCredito)
+        //     {
+        //         int idCredito = grupoCredito.Key;
+
+        //         // Traer el crédito
+        //         var credito = CM_Credito_materiales.GetByIdCredito(idCredito, con, trx);
+        //         DateTime fechaAltaCredito = credito.fecha_alta ?? DateTime.MinValue;
+
+        //         // Calcular meses transcurridos desde el alta
+        //         int mesesDesdeAlta = CalcularMesesEntre(fechaAltaCredito, fechaActual);
+
+        //         // Valor de la cuota en UVAs (unidades)
+        //         Decimal valorCuotaUVA = credito.valor_cuota_uva ?? 0;
+
+        //         // Obtener el UVA ACTUAL
+        //         Decimal valorUVAActual = CM_UVA.GetUltimaFila().valor_uva;
+
+        //         // Ordenar cuotas por vencimiento
+        //         var cuotasOrdenadas = grupoCredito.OrderBy(c => c.vencimiento).ToList();
+
+        //         for (int i = 0; i < cuotasOrdenadas.Count; i++)
+        //         {
+        //             var cuota = cuotasOrdenadas[i];
+
+        //             // Número de cuota (1, 2, 3, 4...)
+        //             int nroCuota = i + 1;
+
+        //             // Determinar a qué trimestre pertenece
+        //             // Cuota 1,2,3 -> trimestre 0 (mes inicio: 1)
+        //             // Cuota 4,5,6 -> trimestre 1 (mes inicio: 4)
+        //             // Cuota 7,8,9 -> trimestre 2 (mes inicio: 7)
+        //             int trimestreCuota = (nroCuota - 1) / 3;
+
+        //             // Mes de inicio del trimestre (1, 4, 7, 10...)
+        //             int mesInicioTrimestreCuota = (trimestreCuota * 3) + 1;
+
+        //             // CLAVE: Solo actualizar si estamos EXACTAMENTE en el mes de inicio del trimestre
+        //             if (mesesDesdeAlta == mesInicioTrimestreCuota)
+        //             {
+        //                 // Calcular nuevo monto en pesos con UVA ACTUAL
+        //                 Decimal nuevoMontoPesos = valorCuotaUVA * valorUVAActual;
+
+        //                 // Calcular cuánto se pagó (mantener pagos parciales)
+        //                 Decimal montoPagado = cuota.monto_original - cuota.debe;
+
+        //                 // Actualizar valores
+        //                 cuota.monto_original = nuevoMontoPesos;
+        //                 cuota.debe = nuevoMontoPesos - montoPagado;
+
+        //                 CM_Ctasctes_credito_materiales.Update(cuota, con, trx);
+        //                 cuotasActualizadas++;
+        //             }
+        //         }
+        //     }
+        // }
     }
 }

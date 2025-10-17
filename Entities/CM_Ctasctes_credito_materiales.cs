@@ -210,7 +210,7 @@ namespace CreditosApi.Entities
             }
             catch
             {
-                throw; 
+                throw;
             }
         }
 
@@ -466,30 +466,6 @@ namespace CreditosApi.Entities
             }
         }
 
-        // public static List<CM_Ctasctes_credito_materiales> GetListCtaCteById(int id_credito_materiales, SqlConnection con, SqlTransaction trx)
-        // {
-        //     try
-        //     {
-        //         List<CM_Ctasctes_credito_materiales> lst = new List<CM_Ctasctes_credito_materiales>();
-
-        //         string SQL = "SELECT * FROM Cm_ctasctes_credito_materiales WHERE id_credito_materiales = @id_credito_materiales";
-
-        //         SqlCommand cmd = con.CreateCommand();
-        //         cmd.Transaction = trx;
-        //         cmd.CommandType = CommandType.Text;
-        //         cmd.CommandText = SQL;
-
-        //         cmd.Parameters.AddWithValue("@id_credito_materiales", id_credito_materiales);
-        //         SqlDataReader dr = cmd.ExecuteReader();
-        //         lst = mapeo(dr);
-
-        //         return lst;
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         throw new Exception("Error al obtener los registros de Cm_ctasctes_credito_materiales", ex);
-        //     }
-        // }
 
         public static List<CM_Ctasctes_credito_materiales> GetListCtaCteById(int id_credito_materiales, SqlConnection con, SqlTransaction trx)
         {
@@ -703,6 +679,35 @@ namespace CreditosApi.Entities
             }
         }
 
+
+
+        public static List<CM_Ctasctes_credito_materiales> ObtenerCuotasNoPagadas( SqlConnection con, SqlTransaction trx)
+        {
+            try
+            {
+                List<CM_Ctasctes_credito_materiales> lst = new List<CM_Ctasctes_credito_materiales>();
+
+                string SQL = "SELECT * FROM Cm_ctasctes_credito_materiales WHERE pagado = 0";
+
+                using (SqlCommand cmd = con.CreateCommand())
+                {
+                    cmd.Transaction = trx;
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = SQL;
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        lst = mapeo(dr);
+                    }
+                }
+
+                return lst;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al obtener los registros de Cm_ctasctes_credito_materiales", ex);
+            }
+        }
     }
 }
 

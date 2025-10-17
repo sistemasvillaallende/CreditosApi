@@ -98,5 +98,37 @@ namespace CreditosApi.Controllers
             }
         }
 
+        [HttpPut]
+        public ActionResult ActualizarValorCuotas()
+        {
+            try
+            {
+                _CM_CtasctesService.ActualizarCreditos();
+
+                return Ok(new
+                {
+                    success = true,
+                    message = "Recalculo de cuotas exitosa",
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = $"Error de validación: {ex.Message}",
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = "Error interno del servidor al procesar la solicitud",
+                });
+            }
+        }
+
+
     }
 }

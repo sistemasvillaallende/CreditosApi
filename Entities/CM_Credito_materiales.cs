@@ -234,6 +234,37 @@ namespace CreditosApi.Entities
             }
         }
 
+        public static CM_Credito_materiales GetByIdYLegajo(int id_credito_materiales,int legajo)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.AppendLine("SELECT *FROM Cm_credito_materiales WHERE");
+                sql.AppendLine("id_credito_materiales = @id_credito_materiales AND");
+                sql.AppendLine("legajo = @legajo");
+                CM_Credito_materiales obj = null;
+                using (SqlConnection con = GetConnection())
+                {
+                    SqlCommand cmd = con.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = sql.ToString();
+                    cmd.Parameters.AddWithValue("@id_credito_materiales", id_credito_materiales);
+                    cmd.Parameters.AddWithValue("@legajo", legajo);
+                    cmd.Connection.Open();
+                    SqlDataReader dr = cmd.ExecuteReader();
+                    List<CM_Credito_materiales> lst = mapeo(dr);
+                    if (lst.Count != 0)
+                        obj = lst[0];
+                }
+                return obj;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
         public static List<CM_Credito_materiales> GetById(int id_credito_materiales, SqlConnection con, SqlTransaction trx)
         {
             try
@@ -255,7 +286,37 @@ namespace CreditosApi.Entities
             }
             catch
             {
-                throw; 
+                throw;
+            }
+        }
+
+
+        public static CM_Credito_materiales GetByIdCredito(int id_credito_materiales, SqlConnection con, SqlTransaction trx)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.AppendLine("SELECT * FROM Cm_credito_materiales WHERE id_credito_materiales = @id_credito_materiales");
+                CM_Credito_materiales obj = null;
+
+                using (SqlCommand cmd = new SqlCommand(sql.ToString(), con, trx))
+                {
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.AddWithValue("@id_credito_materiales", id_credito_materiales);
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        List<CM_Credito_materiales> lst = mapeo(dr);
+                        if (lst.Count != 0)
+                            obj = lst[0];
+                    }
+                    return obj;
+
+                }
+            }
+            catch
+            {
+                throw;
             }
         }
 
@@ -738,7 +799,34 @@ namespace CreditosApi.Entities
         }
 
 
+        public static DateTime GetFechaAlta(int id_credito_materiales, SqlConnection con, SqlTransaction trx)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.AppendLine("SELECT fecha_alta FROM Cm_credito_materiales WHERE id_credito_materiales = @id_credito_materiales");
 
+                using (SqlCommand cmd = new SqlCommand(sql.ToString(), con, trx))
+                {
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.AddWithValue("@id_credito_materiales", id_credito_materiales);
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        if (dr.Read())
+                        {
+                            if (dr["fecha_alta"] != DBNull.Value)
+                                return Convert.ToDateTime(dr["fecha_alta"]);
+                        }
+                    }
+                }
+                return DateTime.MinValue;
+            }
+            catch
+            {
+                throw;
+            }
+        }
 
     }
 }

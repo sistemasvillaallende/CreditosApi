@@ -66,67 +66,6 @@ namespace CreditosApi.Services
             }
         }
 
-        // public void InsertDeudasPorCuotas(CM_Credito_materiales obj, SqlConnection con, SqlTransaction trx)
-        // {
-        //     int cantCuotas = obj.cant_cuotas;
-        //     Decimal presupuesto = obj.presupuesto;
-
-        //     Decimal MontoXCuota = presupuesto / cantCuotas;
-
-        //     for (int i = 0; i < cantCuotas; i++)
-        //     {
-        //         CM_Ctasctes_credito_materiales ctacte = new CM_Ctasctes_credito_materiales();
-        //         ctacte.tipo_transaccion = 1;
-        //         ctacte.fecha_trasaccion = DateTime.Now;
-        //         ctacte.id_credito_materiales = obj.id_credito_materiales;
-        //         ctacte.periodo = GeneradorPeriodo.GeneradorPeriodoXCuota(i);
-        //         ctacte.monto_original = MontoXCuota;
-        //         ctacte.debe = MontoXCuota;
-        //         ctacte.vencimiento = DateTime.Now.AddMonths(1);
-
-        //         int ultimoRegistro = CM_Ctasctes_credito_materiales.ObtenerUltimoNroTransaccion(con,trx);
-        //         Entities.CM_Ctasctes_credito_materiales.Insert(ctacte,con,trx,ultimoRegistro);
-
-        //     }
-        // }
-
-        // public void UpdateDeuda(int legajo, int id_credito_materiales, Credito_materialesAuditoria obj)
-        // {
-        //     try
-        //     {
-        //         using (SqlConnection con = DALBase.GetConnection())
-        //         {
-        //             con.Open();
-
-        //             using (SqlTransaction trx = con.BeginTransaction())
-        //             {
-        //                 try
-        //                 {
-        //                     obj.auditoria.identificacion = legajo.ToString();
-        //                     obj.auditoria.proceso = "ACTUALIZAR CREDITO MATERIALES";
-        //                     obj.auditoria.detalle = JsonConvert.SerializeObject(obj.creditoMateriales);
-        //                     obj.auditoria.observaciones = string.Format("Fecha auditoria: {0}", DateTime.Now);
-        //                     Entities.CM_Credito_materiales.Update(legajo, id_credito_materiales, obj.creditoMateriales, con, trx);
-        //                     AuditoriaD.InsertAuditoria(obj.auditoria, con, trx);
-        //                     trx.Commit();
-        //                 }
-        //                 catch (Exception)
-        //                 {
-        //                     trx.Rollback();
-        //                     throw;
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     catch (Exception ex)
-        //     {
-        //         throw ex;
-        //     }
-        // }
-
-
-
 
         public void DeleteDeudaCtaCte(int tipo_transaccion, int nro_transaccion, Auditoria obj)
         {
@@ -208,17 +147,151 @@ namespace CreditosApi.Services
 
 
         public List<ResumenImporteDTO> ResumenImporte()
-        {         
+        {
             try
             {
                 return CM_Ctasctes_credito_materiales.ResumenImporte();
             }
             catch (System.Exception)
             {
-                
+
                 throw;
             }
         }
+
+
+        public void ActualizarCreditos() // Auditoria obj
+        {
+            try
+            {
+                using (SqlConnection con = DALBase.GetConnection())
+                {
+                    con.Open();
+
+                    using (SqlTransaction trx = con.BeginTransaction())
+                    {
+                        try
+                        {
+                            // obj.auditoria.identificacion = legajo.ToString();
+                            // obj.auditoria.proceso = "ACTUALIZAR CUOTAS";
+                            // obj.auditoria.detalle = JsonConvert.SerializeObject(obj.creditoMateriales);
+                            // obj.auditoria.observaciones = string.Format("Fecha auditoria: {0}", DateTime.Now);
+
+                            //ActualizarCuotasUVATrimestral2(con, trx);
+                            ActualizarCuotasUVATrimestral(con,trx);
+
+                            // AuditoriaD.InsertAuditoria(obj.auditoria, con, trx);
+                            trx.Commit();
+                        }
+                        catch (Exception)
+                        {
+                            trx.Rollback();
+                            throw;
+                        }
+                    }
+                }
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
+        //private int CalcularMesesEntre(DateTime fechaInicio, DateTime fechaFin)
+        //{
+        //    int meses = ((fechaFin.Year - fechaInicio.Year) * 12) + fechaFin.Month - fechaInicio.Month;
+
+        //    // Si el día actual es menor al día de inicio, restamos un mes
+        //    if (fechaFin.Day < fechaInicio.Day)
+        //    {
+        //        meses--;
+        //    }
+
+        //    return meses + 1; // +1 porque el primer mes cuenta como mes 1, no mes 0
+        //}
+
+        private int CalcularMesesEntre(DateTime fechaInicio, DateTime fechaFin)
+        {
+            int meses = ((fechaFin.Year - fechaInicio.Year) * 12) + fechaFin.Month - fechaInicio.Month;
+            if (fechaFin.Day < fechaInicio.Day)
+                meses--;
+            return meses;
+        }
+
+
+        public void ActualizarCuotasUVATrimestral(SqlConnection con, SqlTransaction trx)
+        {
+            try
+            {
+                DateTime fechaActual = DateTime.Now;
+
+                // Valor UVA actual
+                Decimal valorUVAActual = CM_UVA.GetUltimaFila().valor_uva;
+
+                // Traer todos los créditos
+                var creditosTodos = CM_Credito_materiales.read(con, trx);
+
+                foreach (var credito in creditosTodos)
+                {
+                    int idCredito = credito.id_credito_materiales;
+
+                    // if (idCredito == 88)
+                    // {
+                        Decimal valorCuotaUVA = credito.valor_cuota_uva ?? 0;
+
+                        // Traer las cuotas del crédito
+                        var cuotas = CM_Ctasctes_credito_materiales.GetCuotasByCredito(idCredito, con, trx);
+                        if (cuotas == null || cuotas.Count == 0)
+                            continue;
+
+                        // Tomar la fecha de la primera cuota (referencia real del trimestre)
+                        DateTime fechaPrimeraCuota = cuotas.First().vencimiento;
+
+                        // Calcular meses desde la PRIMERA cuota
+                        int mesesDesdePrimeraCuota = CalcularMesesEntre(fechaPrimeraCuota, fechaActual);
+
+                        // Solo actualizar si estamos en el inicio de un nuevo trimestre (0,3,6,9,...)
+                        bool esInicioTrimestre = (mesesDesdePrimeraCuota % 3 == 0);
+
+                        if (!esInicioTrimestre)
+                            continue;
+
+                        // Determinar trimestre actual
+                        int trimestreActual = mesesDesdePrimeraCuota / 3;
+
+                        // Calcular cuotas que pertenecen a este trimestre
+                        int cuotaInicio = (trimestreActual * 3) + 1;
+                        int cuotaFin = cuotaInicio + 2;
+
+                        for (int i = cuotaInicio - 1; i <= cuotaFin - 1 && i < cuotas.Count; i++)
+                        {
+                            var cuota = cuotas[i];
+
+                            // 🔒 Si la cuota está pagada, no se modifica
+                            if (cuota.pagado == true)
+                                continue;
+
+                            Decimal montoPagado = cuota.monto_original - cuota.debe;
+                            Decimal nuevoMontoPesos = valorCuotaUVA * valorUVAActual;
+
+                            cuota.monto_original = nuevoMontoPesos;
+                            cuota.debe = nuevoMontoPesos - montoPagado;
+
+                            CM_Ctasctes_credito_materiales.Update(cuota, con, trx);
+                        }
+                    }
+               // }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+
 
 
     }

@@ -125,20 +125,45 @@ namespace CreditosApi.Controllers
         {
             try
             {
+
+                var credito = _CM_Credito_materialesService.GetByIdYLegajo(id_credito_materiales,legajo);
+
+                if (credito == null)
+                {
+                    return NotFound(new
+                    {
+                        success = false,
+                        message = $"No se encontró un crédito con legajo {legajo} e ID {id_credito_materiales}."
+                    });
+                }
+
                 var lstCtactes = _CM_CtasctesServices.GetListTodasDeudas(id_credito_materiales);
 
                 if (lstCtactes.Any(cta => cta.pagado == 1))
                 {
-                    return BadRequest(new { message = "No se puede eliminar credito por presentar almenos una cuota pagada" });
+                    return BadRequest(new
+                    {
+                        success = false,
+                        message = "No se puede eliminar el crédito porque presenta al menos una cuota pagada."
+                    });
                 }
 
                 _CM_Credito_materialesService.DeleteCredito(legajo, id_credito_materiales, obj);
 
-                return Ok(new { message = $"Se ha eliminado correctamente el credito con legajo {legajo} ." });
+                return Ok(new
+                {
+                    success = true,
+                    message = $"Se ha eliminado correctamente el crédito con legajo {legajo} e ID {id_credito_materiales}."
+                });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Ocurrió un error al eliminar credito: " + ex.Message);
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = "Error interno del servidor al eliminar el crédito.",
+                    error = ex.Message
+                });
             }
         }
 

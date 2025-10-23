@@ -24,8 +24,7 @@ namespace CreditosApi
             services.AddScoped<ICM_Cate_deuda_creditoServices, CM_Cate_deuda_creditoServices>();
             services.AddScoped<IBadecServices, BadecServices>();
             services.AddScoped<ICM_UVAServices, CM_UVAServices>();
-
-
+            services.AddScoped<ICM_rubro_creditoService, CM_rubro_creditoService>();
 
 
             //

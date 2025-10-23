@@ -596,7 +596,7 @@ namespace CreditosApi.Entities
             {
                 List<ResumenImporteDTO> lst = new List<ResumenImporteDTO>();
                 ResumenImporteDTO obj;
-                string SQL = @" SELECT a.legajo, a.fecha_alta, a.cuit_solicitante,
+                string SQL = @" SELECT a.id_credito_materiales,a.legajo, a.fecha_alta, a.cuit_solicitante,
                                     a.Nombre, 
                                     a.domicilio,
                                     a.presupuesto,
@@ -652,6 +652,7 @@ namespace CreditosApi.Entities
                             {
                                 obj = new ResumenImporteDTO();
 
+                                if (!dr.IsDBNull(dr.GetOrdinal("id_credito_materiales"))) { obj.id_credito_materiales = dr.GetInt32(dr.GetOrdinal("id_credito_materiales")); }
                                 if (!dr.IsDBNull(dr.GetOrdinal("legajo"))) { obj.legajo = dr.GetInt32(dr.GetOrdinal("legajo")); }
                                 if (!dr.IsDBNull(dr.GetOrdinal("fecha_alta"))) { obj.fecha_alta = dr.GetDateTime(dr.GetOrdinal("fecha_alta")); }
                                 if (!dr.IsDBNull(dr.GetOrdinal("cuit_solicitante"))) { obj.cuit_solicitante = dr.GetString(dr.GetOrdinal("cuit_solicitante")); }

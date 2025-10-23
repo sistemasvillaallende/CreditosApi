@@ -34,6 +34,7 @@ namespace CreditosApi.Entities
         public int parcela { get; set; }
         public int p_h { get; set; }
         public string nombre { get; set; }
+        public int cod_rubro { get; set; }
 
 
         public CM_Credito_materiales()
@@ -62,6 +63,7 @@ namespace CreditosApi.Entities
             parcela = 0;
             p_h = 0;
             nombre = string.Empty;
+            cod_rubro = 0;
         }
 
         private static List<CM_Credito_materiales> mapeo(SqlDataReader dr)
@@ -94,6 +96,7 @@ namespace CreditosApi.Entities
                 int parcela = dr.GetOrdinal("parcela");
                 int p_h = dr.GetOrdinal("p_h");
                 int nombre = dr.GetOrdinal("nombre");
+                int cod_rubro = dr.GetOrdinal("cod_rubro");
 
 
                 while (dr.Read())
@@ -123,6 +126,7 @@ namespace CreditosApi.Entities
                     if (!dr.IsDBNull(parcela)) { obj.parcela = dr.GetInt32(parcela); }
                     if (!dr.IsDBNull(p_h)) { obj.p_h = dr.GetInt32(p_h); }
                     if (!dr.IsDBNull(nombre)) { obj.nombre = dr.GetString(nombre); }
+                    if (!dr.IsDBNull(cod_rubro)) { obj.cod_rubro = dr.GetInt32(cod_rubro); }
 
                     lst.Add(obj);
                 }
@@ -425,13 +429,13 @@ namespace CreditosApi.Entities
                 legajo, domicilio, fecha_alta, baja, fecha_baja, cuit_solicitante, 
                 garantes, presupuesto, presupuesto_uva, cant_cuotas, valor_cuota_uva, 
                 id_uva, id_estado, per_ultimo, con_deuda, saldo_adeudado, proximo_vencimiento, circunscripcion, 
-                seccion,manzana, parcela , p_h , nombre
+                seccion,manzana, parcela , p_h , nombre, cod_rubro
             ) 
             VALUES (
                 @legajo, @domicilio, @fecha_alta, @baja, @fecha_baja, @cuit_solicitante, 
                 @garantes, @presupuesto, @presupuesto_uva, @cant_cuotas, @valor_cuota_uva, 
                 @id_uva, @id_estado, @per_ultimo, @con_deuda, @saldo_adeudado, @proximo_vencimiento,
-                @circunscripcion, @seccion, @manzana, @parcela, @p_h , @nombre
+                @circunscripcion, @seccion, @manzana, @parcela, @p_h , @nombre, @cod_rubro
             );
             SELECT SCOPE_IDENTITY();
         ";
@@ -461,6 +465,7 @@ namespace CreditosApi.Entities
                     cmd.Parameters.AddWithValue("@parcela", obj.parcela);
                     cmd.Parameters.AddWithValue("@p_h", obj.p_h);
                     cmd.Parameters.AddWithValue("@nombre", obj.nombre);
+                    cmd.Parameters.AddWithValue("@cod_rubro", obj.cod_rubro);
 
                     object result = cmd.ExecuteScalar();
                     return Convert.ToInt32(result);
@@ -573,7 +578,8 @@ namespace CreditosApi.Entities
                 sql.AppendLine(", manzana = @manzana");
                 sql.AppendLine(", parcela = @parcela");
                 sql.AppendLine(", p_h = @p_h");
-                sql.AppendLine(", nombre = @nombre");
+                sql.AppendLine(", nombre = @nombre"); 
+                sql.AppendLine(", cod_rubro = @cod_rubro");
                 sql.AppendLine("WHERE");
                 sql.AppendLine("id_credito_materiales = @id_credito_materiales");
                 //sql.AppendLine("AND legajo = @legajo");
@@ -606,7 +612,7 @@ namespace CreditosApi.Entities
                     cmd.Parameters.AddWithValue("@p_h", obj.p_h);
                     cmd.Parameters.AddWithValue("@id_credito_materiales", id_credito_materiales);
                     cmd.Parameters.AddWithValue("@nombre", obj.nombre);
-
+                    cmd.Parameters.AddWithValue("@cod_rubro", obj.cod_rubro);
                     cmd.ExecuteNonQuery();
                 }
             }

@@ -5,6 +5,7 @@ namespace CreditosApi.Model
     public class ResumenImporteDTO
     {
 
+        public int id_credito_materiales { get; set; }
         public int legajo { get; set; }
         public DateTime fecha_alta { get; set; }
         public string cuit_solicitante { get; set; }
@@ -21,6 +22,7 @@ namespace CreditosApi.Model
 
         public ResumenImporteDTO()
         {
+            id_credito_materiales = 0;
             legajo = 0;
             fecha_alta = DateTime.Now;
             cuit_solicitante = string.Empty;

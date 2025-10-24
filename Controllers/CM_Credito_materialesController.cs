@@ -67,9 +67,16 @@ namespace CreditosApi.Controllers
             {
                 var lstCtactes = _CM_CtasctesServices.GetListTodasDeudas(id_credito_materiales);
 
+
                 if (lstCtactes.Any(cta => cta.pagado == 1))
                 {
-                    return BadRequest(new { message = "No se puede modificar credito por presentar almenos una cuota pagada" });
+                    _CM_Credito_materialesService.UpdateCreditoParcial(id_credito_materiales, obj.categoria_deuda, obj.creditoMateriales.cod_rubro);
+
+                    return Ok(new
+                    {
+                        message = $"Se actualizaron campos parciales en el legajo : {legajo}.",
+                        nota = "Solo se modificaron campos permitidos debido a que existen cuotas pagadas"
+                    });
                 }
 
                 _CM_Credito_materialesService.UpdateCredito(legajo, id_credito_materiales, obj);
@@ -78,7 +85,12 @@ namespace CreditosApi.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Ocurrió un error al intentar modificar nuevo credito: " + ex.Message);
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = "Ocurrió un error al intentar modificar nuevo credito: ",
+                    error = ex.Message
+                });
             }
         }
 
@@ -126,7 +138,7 @@ namespace CreditosApi.Controllers
             try
             {
 
-                var credito = _CM_Credito_materialesService.GetByIdYLegajo(id_credito_materiales,legajo);
+                var credito = _CM_Credito_materialesService.GetByIdYLegajo(id_credito_materiales, legajo);
 
                 if (credito == null)
                 {

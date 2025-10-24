@@ -18,6 +18,7 @@ namespace CreditosApi.Services
 
         public void InsertNuevoCredito(Credito_materialesAuditoria obj);
         public void UpdateCredito(int legajo, int id_credito_materiales, Credito_materialesAuditoria obj);
+        public void UpdateCreditoParcial( int id_credito_materiales, int? categoria_deuda, int cod_rubro);
         public void DeleteCredito(int legajo, int id_credito_materiales, Auditoria obj);
         public void BajaCredito(int legajo, int id_credito_materiales, Auditoria obj);
         public void AltaCredito(int id_credito_materiales, Auditoria obj);

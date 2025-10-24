@@ -622,6 +622,30 @@ namespace CreditosApi.Entities
             }
         }
 
+        public static void UpdateCreditoParcial( int id_credito_materiales, int cod_rubro,  SqlConnection con, SqlTransaction trx)
+        {
+              try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.AppendLine("UPDATE  Cm_credito_materiales SET");
+                sql.AppendLine("cod_rubro = @cod_rubro");
+                sql.AppendLine("WHERE");
+                sql.AppendLine("id_credito_materiales = @id_credito_materiales");
+
+                using (SqlCommand cmd = new SqlCommand(sql.ToString(), con, trx))
+                {
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.AddWithValue("@id_credito_materiales", id_credito_materiales);
+                    cmd.Parameters.AddWithValue("@cod_rubro", cod_rubro);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al actualizar Cm_credito_materiales con id_credito {id_credito_materiales}: {ex.Message}", ex);
+            }
+        }
+
 
         public static void Delete(int legajo, int id_credito_materiales, SqlConnection con, SqlTransaction trx)
         {

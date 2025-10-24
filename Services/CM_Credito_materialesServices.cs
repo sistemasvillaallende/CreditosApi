@@ -222,6 +222,40 @@ namespace CreditosApi.Services
             }
         }
 
+
+        public void UpdateCreditoParcial( int id_credito_materiales,  int? categoria_deuda, int cod_rubro)
+        {
+            try
+            {
+                using (SqlConnection con = DALBase.GetConnection())
+                {
+                    con.Open();
+
+                    using (SqlTransaction trx = con.BeginTransaction())
+                    {
+                        try
+                        {
+                            CM_Credito_materiales.UpdateCreditoParcial(id_credito_materiales, cod_rubro, con, trx);
+                            CM_Ctasctes_credito_materiales.UpdateCampoCategoria(categoria_deuda,id_credito_materiales,con,trx);
+
+                            trx.Commit();
+                        }
+                        catch (Exception)
+                        {
+                            trx.Rollback();
+                            throw;
+                        }
+                    }
+                }
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
         public void BajaCredito(int legajo, int id_credito_materiales, Auditoria obj)
         {
             try

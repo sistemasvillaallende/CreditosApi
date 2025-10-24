@@ -342,6 +342,34 @@ namespace CreditosApi.Entities
             }
         }
 
+
+   public static void UpdateCampoCategoria(int? categoria_deuda, int id_credito_materiales, SqlConnection con, SqlTransaction trx)
+        {
+            try
+            {
+                int categoriaFinal = categoria_deuda ?? 1;
+
+                StringBuilder sql = new StringBuilder();
+                sql.AppendLine("UPDATE Cm_ctasctes_credito_materiales SET");
+                sql.AppendLine("categoria_deuda = @categoria_deuda");
+                 sql.AppendLine("WHERE id_credito_materiales=@id_credito_materiales");
+ 
+                using (SqlCommand cmd = new SqlCommand(sql.ToString(), con, trx))
+
+                {
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.AddWithValue("@id_credito_materiales", id_credito_materiales);
+                    cmd.Parameters.AddWithValue("@categoria_deuda", categoriaFinal);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public static void UpdateCampoDebe(decimal campoDebe, int tipo_transaccion, int nro_transaccion, int id_credito_materiales, SqlConnection con, SqlTransaction trx)
         {
             try
